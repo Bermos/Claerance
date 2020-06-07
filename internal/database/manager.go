@@ -14,7 +14,7 @@ type database struct {
 type Databaser interface {
 	Connect(string)
 	AddUser(string, string)
-	GetUser(string)(string, error)
+	GetUser(string) (string, error)
 }
 
 func NewDatabase(driver string, url string) Databaser {
@@ -22,7 +22,7 @@ func NewDatabase(driver string, url string) Databaser {
 	if err := db.Ping(); err != nil {
 		log.Fatal(err)
 	} else {
-		log.Println("database connection established")
+		log.Println("Database connection established")
 	}
 
 	_, err := db.Exec(`CREATE TABLE users (id INT AUTO_INCREMENT, username TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY (id))`)

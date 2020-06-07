@@ -1,0 +1,18 @@
+swagger: "2.0"
+info:
+  title: Claerance
+  description: Claerance
+  version: 1.0.0
+host: your-domain.tld
+basePath: /api/v1
+schemes:
+  - https
+paths:
+  /auth:
+    get:
+      responses:
+        200:
+          description: "Authentication successful"
+        303:
+          description: "Authentication unsuccessful, redirecting to login page."
+      summary: "Authenticate to clearance"

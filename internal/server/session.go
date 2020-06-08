@@ -49,7 +49,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 	if users.AuthWithCredentials(login.Username, login.Password, ip, device) {
 		log.Println("Login successful")
 
-		session, _ := store.Get(r, "sso-session")
+		session, _ := store.Get(r, "claerance-session")
 		// Set some session values.
 		session.Values["authenticated"] = true
 		session.Values["username"] = login.Username

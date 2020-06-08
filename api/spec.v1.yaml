@@ -16,3 +16,26 @@ paths:
         303:
           description: "Authentication unsuccessful, redirecting to login page."
       summary: "Authenticate to clearance"
+  /user/list:
+    get:
+      responses:
+        200:
+          description: "Get list of all users"
+        401:
+          description: "No authorisation provided"
+        403:
+          description: "Not authorized"
+  /user/{id}:
+    get:
+      responses:
+        200:
+          description: "Get detailed information about user"
+    put:
+      responses:
+        200:
+          description: "User info successfully updated"
+  /user/create:
+    post:
+      responses:
+        201:
+          description: "User successfully created"

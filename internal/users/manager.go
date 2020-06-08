@@ -8,39 +8,39 @@ import (
 )
 
 type Login struct {
-	ip string
-	device string
-	session Session
-	date time.Time
+	ip         string
+	device     string
+	session    Session
+	date       time.Time
 	successful bool
 }
 
 type Session struct {
-	id int
-	ip string
-	cookie string
-	device string
+	id         int
+	ip         string
+	cookie     string
+	device     string
 	validUntil time.Time
 }
 
 type User struct {
-	name string
+	name    string
 	pwdHash string
 }
 
 var (
 	users []User
-	db database.Databaser
+	db    database.Databaser
 )
 
 func Setup() {
 	db = database.NewDatabase("sqlite3", "testUrl2")
 
-	addUser("bermos", "test")
-	addUser("test",   "test")
+	AddUser("bermos", "test")
+	AddUser("test", "test")
 }
 
-func addUser(username string, password string) {
+func AddUser(username string, password string) {
 	hashedPW, _ := bcrypt.GenerateFromPassword([]byte(password), 12)
 	db.AddUser(username, string(hashedPW))
 }

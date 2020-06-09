@@ -45,6 +45,15 @@ func AddUser(username string, password string) {
 	db.AddUser(username, string(hashedPW))
 }
 
+func GetUserById(userId int) (User, error) {
+	var u User
+	var err error
+	u.name, err = db.GetUserById(userId)
+	u.pwdHash = ""
+
+	return u, err
+}
+
 func getUser(username string) (User, error) {
 	var u User
 	var err error

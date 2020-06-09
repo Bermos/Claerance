@@ -15,6 +15,7 @@ type Databaser interface {
 	Connect(string)
 	AddUser(string, string)
 	GetUser(string) (string, error)
+	GetUserById(int) (string, error)
 }
 
 func NewDatabase(driver string, url string) Databaser {
@@ -99,4 +100,13 @@ func (d database) GetUser(username string) (string, error) {
 	err := d.db.QueryRow(query, username).Scan(&pwdHash)
 
 	return pwdHash, err
+}
+
+func (d database) GetUserById(userId int) (string, error) {
+	var username string
+
+	query := `SELECT username FROM users WHERE id = ?`
+	err := d.db.QueryRow(query, userId).Scan(&username)
+
+	return username, err
 }

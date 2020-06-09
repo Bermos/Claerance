@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type CreateUserRequest struct {
@@ -21,7 +22,20 @@ func handleUser(w http.ResponseWriter, r *http.Request, endpoint string) {
 		userBase(w, r)
 	case "user/create":
 		createUser(w, r)
+	default:
+		if strings.HasPrefix(endpoint, "user/") {
+			switch r.Method {
+			case "GET":
+				getUser(w, r)
+			}
+		} else {
+			w.WriteHeader(http.StatusNotFound)
+		}
 	}
+}
+
+func getUser(w http.ResponseWriter, r *http.Request) {
+	users.GetUserById(1)
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {

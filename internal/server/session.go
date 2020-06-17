@@ -3,10 +3,13 @@ package server
 import (
 	"Claerance/internal/users"
 	"encoding/json"
+	sess "github.com/gorilla/sessions"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
+
+var store *sess.CookieStore
 
 type LoginRequest struct {
 	Username string `json:"username"`
@@ -59,7 +62,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		w.WriteHeader(http.StatusOK)
+		w.WriteHeader(http.StatusCreated)
 	} else {
 		log.Println("Login failed")
 		http.Error(w, "Forbidden", http.StatusUnauthorized)
@@ -72,5 +75,39 @@ func destroySession(w http.ResponseWriter, r *http.Request) {
 
 	// Revoke users authentication
 	session.Values["authenticated"] = false
-	session.Save(r, w)
+	_ = session.Save(r, w)
+}
+
+func IsValid(r *http.Request) bool {
+	session, _ := store.Get(r, "claerance-session")
+
+	// Check if user is authenticated
+	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+		log.Println("no auth:", r.Header.Get("X-Forwarded-Host"), "from:", r.Header.Get("X-Forwarded-For"))
+		return false
+	} else {
+		log.Println("auth:   ", r.Header.Get("X-Forwarded-Host"), "from:", r.Header.Get("X-Forwarded-For"))
+		return true
+	}
+}
+
+func GetUsername(r *http.Request) string {
+	session, _ := store.Get(r, "claerance-session")
+	return session.Values["username"].(string)
+}
+
+func InitSessionStore() {
+	log.Println("Setting up sessions store")
+	key := []byte("asdjfadfasbfasdhfajk")
+	log.Printf("Key length: %d", len(key))
+	store = sess.NewCookieStore(key)
+
+	store.Options = &sess.Options{
+		Path:     "/",
+		MaxAge:   86400 * 7, // 7 days
+		Secure:   true,
+		HttpOnly: true,
+	}
+
+	log.Println("Sessions store setup")
 }

@@ -3,32 +3,31 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	sess "github.com/gorilla/sessions"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type GenericMsg struct {
 	Msg string `json:"msg"`
 }
 
-var store = sess.NewCookieStore([]byte("asdjfadfasbfasdhfajf"))
-
 // Start the server on the given port. This is blocking.
 func Start(port int) {
 	// Serve static frontend page
-	fs := http.FileServer(http.Dir("webroot/public"))
-	http.Handle("/", http.StripPrefix("/", fs))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		file, err := ioutil.ReadFile("web/public/" + r.URL.Path[1:])
+		if err != nil {
+			http.ServeFile(w, r, "web/public/index.html")
+		} else {
+			http.ServeContent(w, r, r.URL.Path[1:], time.Now(), strings.NewReader(string(file)))
+		}
+	})
 
+	// Serve backend api
 	http.HandleFunc("/api/", apiEndpoint)
-
-	store.Options = &sess.Options{
-		Path:     "/",
-		MaxAge:   86400 * 7,
-		Secure:   true,
-		HttpOnly: true,
-	}
 
 	// Start server, this function is blocking
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))

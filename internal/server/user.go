@@ -14,6 +14,11 @@ type CreateUserRequest struct {
 	Password string `json:"password"`
 }
 
+type UserData struct {
+	Username  string `json:"username"`
+	CreatedAt string `json:"createdAt"`
+}
+
 func handleUser(w http.ResponseWriter, r *http.Request, endpoint string) {
 	log.Printf("User - handling %s request for %s", r.Method, endpoint)
 
@@ -44,9 +49,13 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &user)
 
-	users.AddUser(user.Username, user.Password)
+	users.CreateUser(user.Username, user.Password)
 }
 
 func userBase(w http.ResponseWriter, r *http.Request) {
+	username := GetUsername(r)
+	user, _ := users.GetUserByName(username)
 
+	w.WriteHeader(http.StatusOK)
+	_ = json.NewEncoder(w).Encode(UserData{Username: user.Username, CreatedAt: user.CreatedAt.String()})
 }

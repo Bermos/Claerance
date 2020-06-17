@@ -1,86 +1,96 @@
 package database
 
 import (
+	"Claerance/internal/users"
 	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
+	"io/ioutil"
 	"log"
 )
 
+var (
+	db       Databaser
+	dbURI    string
+	dbDriver string
+)
+
 type database struct {
-	url string
-	db  *sql.DB
+	db *sql.DB
 }
 
 type Databaser interface {
-	Connect(string)
+	createTableFromFile(string)
 	AddUser(string, string)
-	GetUser(string) (string, error)
-	GetUserById(int) (string, error)
+	GetUserByName(string) (users.User, error)
+	GetUserById(int) (users.User, error)
 }
 
-func NewDatabase(driver string, url string) Databaser {
-	db, _ := sql.Open(driver, "test.db")
+func GetDatabase() Databaser {
+	if db == nil {
+		db = newDatabase()
+	}
+
+	return db
+}
+
+func SetDriver(driver string) {
+	if db != nil {
+		log.Println("WARNING - trying to set db driver after db is already initiated, no changes made!")
+		return
+	}
+
+	dbDriver = driver
+}
+
+func SetURI(uri string) {
+	if db != nil {
+		log.Println("WARNING - trying to set db uri after db is already initiated, no changes made!")
+		return
+	}
+
+	dbURI = uri
+}
+
+func newDatabase() Databaser {
+	if dbDriver == "" {
+		log.Fatal("trying to initiate db without driver being set. Abort.")
+		return nil
+	}
+
+	db, _ := sql.Open(dbDriver, dbURI)
 	if err := db.Ping(); err != nil {
 		log.Fatal(err)
 	} else {
 		log.Println("Database connection established")
 	}
 
-	_, err := db.Exec(`CREATE TABLE users (id INT AUTO_INCREMENT, username TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY (id))`)
+	d := &database{db}
+	d.createTableFromFile("users")
 
-	if err != nil {
-		if err.Error() == "table users already exists" {
-			log.Println("Table already exists, skipping...")
-		} else {
-			log.Fatal(err)
-		}
-	} else {
-		log.Println("Table users created")
-	}
-
-	_, err = db.Exec(`CREATE TABLE sessions (id INT AUTO_INCREMENT, username TEXT NOT NULL, sessionid TEXT NOT NULL, PRIMARY KEY (id))`)
-
-	if err != nil {
-		if err.Error() == "table sessions already exists" {
-			log.Println("Table already exists, skipping...")
-		} else {
-			log.Fatal(err)
-		}
-	} else {
-		log.Println("Table sessions created")
-	}
-
-	return &database{url, db}
+	return d
 }
 
-func (d database) Connect(url string) {
-	d.url = url
-	log.Println(d.db == nil)
-
-	d.db, _ = sql.Open("sqlite3", "test.db")
-	if err := d.db.Ping(); err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("database connection established")
+func (d database) createTableFromFile(tablename string) {
+	statement, err := ioutil.ReadFile(tablename + ".sql")
+	if err != nil {
+		log.Printf("ERROR - Could not read file %s", tablename+".sql")
+		return
 	}
 
-	_, err := d.db.Exec(`CREATE TABLE users (id INT AUTO_INCREMENT, username TEXT NOT NULL, password TEXT NOT NULL, PRIMARY KEY (id))`)
-
+	res, err := d.db.Exec(string(statement))
 	if err != nil {
-		if err.Error() == "table users already exists" {
-			log.Println("Table already exists, skipping...")
-		} else {
-			log.Fatal(err)
-		}
+		log.Println("Table already exists, skipping...")
+		log.Fatal(err)
 	} else {
-		log.Println("Table users created")
+		log.Println(res.RowsAffected()) // TODO find how to check if success
+		log.Printf("Table %s created", tablename)
 	}
 }
 
 func (d database) AddUser(username string, hashedPW string) {
-	pwdHash, err := d.GetUser(username)
+	user, err := d.GetUserByName(username)
 
-	if err == nil && pwdHash != "" {
+	if err == nil && user.PwdHash != "" {
 		log.Println("User not added. Username already exists")
 		return
 	}
@@ -93,20 +103,20 @@ func (d database) AddUser(username string, hashedPW string) {
 	}
 }
 
-func (d database) GetUser(username string) (string, error) {
-	var pwdHash string
+func (d database) GetUserByName(username string) (users.User, error) {
+	var u users.User
 
-	query := `SELECT password FROM users WHERE username = ?`
-	err := d.db.QueryRow(query, username).Scan(&pwdHash)
+	query := `SELECT * FROM users WHERE username = ?`
+	err := d.db.QueryRow(query, username).Scan(&u.Username, &u.PwdHash, &u.CreatedAt, &u.Email, &u.TelegramId)
 
-	return pwdHash, err
+	return u, err
 }
 
-func (d database) GetUserById(userId int) (string, error) {
-	var username string
+func (d database) GetUserById(userId int) (users.User, error) {
+	var u users.User
 
-	query := `SELECT username FROM users WHERE id = ?`
-	err := d.db.QueryRow(query, userId).Scan(&username)
+	query := `SELECT * FROM users WHERE id = ?`
+	err := d.db.QueryRow(query, userId).Scan(&u.Username, &u.PwdHash, &u.CreatedAt, &u.Email, &u.TelegramId)
 
-	return username, err
+	return u, err
 }

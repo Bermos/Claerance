@@ -2,6 +2,7 @@ package server
 
 import (
 	"Claerance/internal/users"
+	userManager "Claerance/internal/users/manager"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -40,21 +41,27 @@ func handleUser(w http.ResponseWriter, r *http.Request, endpoint string) {
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {
-	users.GetUserById(1)
+	userManager.GetUserById(1)
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {
 	var user CreateUserRequest
 	defer r.Body.Close()
+
+	if !IsValid(r) {
+		w.WriteHeader(http.StatusForbidden)
+	}
+
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &user)
 
-	users.CreateUser(user.Username, user.Password)
+	userManager.CreateUser(user.Username, user.Password)
 }
 
 func userBase(w http.ResponseWriter, r *http.Request) {
 	username := GetUsername(r)
-	user, _ := users.GetUserByName(username)
+	var user users.User
+	user, _ = userManager.GetUserByName(username)
 
 	w.WriteHeader(http.StatusOK)
 	_ = json.NewEncoder(w).Encode(UserData{Username: user.Username, CreatedAt: user.CreatedAt.String()})

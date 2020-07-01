@@ -3,14 +3,14 @@ package main
 import (
 	"Claerance/internal/database"
 	"Claerance/internal/server"
-	"Claerance/internal/users"
+	userManger "Claerance/internal/users/manager"
 )
 
 func main() {
 	database.SetDriver("sqlite3")
 	database.SetURI("test.db")
 
-	users.Setup()
+	userManger.Setup()
 
 	server.InitSessionStore()
 	server.Start(1401)

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"Claerance/internal/users"
+	userManger "Claerance/internal/users/manager"
 	"encoding/json"
 	sess "github.com/gorilla/sessions"
 	"io/ioutil"
@@ -45,11 +45,12 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(GenericMsg{Msg: "Not proper JSON"})
 		return
 	}
-	ip := r.Header.Get("X-Forwarded-Host")
-	device := r.Header.Get("User-Agent")
+	/*ip := r.Header.Get("X-Forwarded-Host")
+	device := r.Header.Get("User-Agent")*/
 	log.Println("login from:", login.Username, "with:", login.Password)
 
-	if users.AuthWithCredentials(login.Username, login.Password, ip, device) {
+	user, _ := userManger.GetUserByName(login.Username)
+	if user.CheckPassword(login.Password) {
 		log.Println("Login successful")
 
 		session, _ := store.Get(r, "claerance-session")

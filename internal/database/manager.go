@@ -3,6 +3,8 @@ package database
 import (
 	"Claerance/internal/users"
 	"database/sql"
+	"errors"
+	"fmt"
 	_ "github.com/mattn/go-sqlite3"
 	"io/ioutil"
 	"log"
@@ -20,7 +22,7 @@ type database struct {
 
 type Databaser interface {
 	createTableFromFile(string)
-	AddUser(string, string)
+	AddUser(string, string) error
 	GetUserByName(string) (users.User, error)
 	GetUserById(int) (users.User, error)
 }
@@ -71,7 +73,8 @@ func newDatabase() Databaser {
 }
 
 func (d database) createTableFromFile(tablename string) {
-	statement, err := ioutil.ReadFile(tablename + ".sql")
+	filename := fmt.Sprintf("internal/database/%s/%s.sql", dbDriver, tablename)
+	statement, err := ioutil.ReadFile(filename)
 	if err != nil {
 		log.Printf("ERROR - Could not read file %s", tablename+".sql")
 		return
@@ -82,41 +85,50 @@ func (d database) createTableFromFile(tablename string) {
 		log.Println("Table already exists, skipping...")
 		log.Fatal(err)
 	} else {
-		log.Println(res.RowsAffected()) // TODO find how to check if success
+		log.Println(res.LastInsertId()) // TODO find how to check if success
 		log.Printf("Table %s created", tablename)
 	}
 }
 
-func (d database) AddUser(username string, hashedPW string) {
+func (d database) AddUser(username string, hashedPW string) error {
 	user, err := d.GetUserByName(username)
 
 	if err == nil && user.PwdHash != "" {
-		log.Println("User not added. Username already exists")
-		return
+		return errors.New("username already exists")
 	}
 
 	_, err = d.db.Exec(`INSERT INTO users (username, password) VALUES (?, ?)`, username, hashedPW)
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("User added.")
-	}
+	return err
 }
 
 func (d database) GetUserByName(username string) (users.User, error) {
-	var u users.User
-
 	query := `SELECT * FROM users WHERE username = ?`
-	err := d.db.QueryRow(query, username).Scan(&u.Username, &u.PwdHash, &u.CreatedAt, &u.Email, &u.TelegramId)
+	row := d.db.QueryRow(query, username)
 
-	return u, err
+	return getUserFromQueryRow(row)
 }
 
 func (d database) GetUserById(userId int) (users.User, error) {
-	var u users.User
-
 	query := `SELECT * FROM users WHERE id = ?`
-	err := d.db.QueryRow(query, userId).Scan(&u.Username, &u.PwdHash, &u.CreatedAt, &u.Email, &u.TelegramId)
+	row := d.db.QueryRow(query, userId)
+
+	return getUserFromQueryRow(row)
+}
+
+func getUserFromQueryRow(row *sql.Row) (users.User, error) {
+	var u users.User
+	var email sql.NullString
+	var telegramID sql.NullInt32
+
+	err := row.Scan(&u.Id, &u.Username, &u.PwdHash, &u.CreatedAt, &email, &telegramID)
+
+	if email.Valid {
+		u.Email = email.String
+	}
+
+	if telegramID.Valid {
+		u.TelegramId = int(telegramID.Int32)
+	}
 
 	return u, err
 }

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -19,13 +20,45 @@ type CreateUserRequest struct {
 func userHandler(r *mux.Router) {
 	r.HandleFunc("/create", createUser).Methods("POST")
 	r.HandleFunc("/list", listUsers)
-	r.HandleFunc("/{id:[0-9]+}", getUser)
+	r.HandleFunc("/{id:[0-9]+}", getUser).Methods("GET")
+	r.HandleFunc("/{id:[0-9]+}", deleteUser).Methods("DELETE")
+	r.HandleFunc("/{id:[0-9]+}", updateUser).Methods("PUT")
 	r.HandleFunc("/", userBase)
+}
+
+func updateUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
+
+	user, err := userManager.GetUserById(int(userId))
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		_ = json.NewEncoder(w).Encode(GenericMsg{Msg: "No user with this id found."})
+		return
+	}
+
+	if user, err := userManager.UpdateUser(user); err == nil {
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(user)
+	} else {
+		log.Println(err)
+	}
+}
+
+func deleteUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
+	success := userManager.DeleteUserById(int(userId))
+
+	if success {
+		w.WriteHeader(http.StatusOK)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+	}
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-
 	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
 	user, err := userManager.GetUserById(int(userId))
 

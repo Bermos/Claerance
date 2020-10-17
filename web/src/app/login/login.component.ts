@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import {SessionService} from '../auth/session.service';
+import { SessionService } from '../auth/session.service';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +16,17 @@ export class LoginComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router, private sess: SessionService) { }
 
   ngOnInit(): void {
-    if (this.sess.isAuthenticated()) {
-      this.router.navigate(['/dashboard']);
-    }
+    // TODO: fix automatic redirection if already logged in
+    this.sess.isAuthenticated().subscribe(
+      () => {
+        this.router.navigate(['/dashboard']);
+      },
+      res => {
+        if (res.status !== 401) {
+          this.router.navigate(['/dashboard']);
+        }
+      }
+    );
   }
 
   login() {

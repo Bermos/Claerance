@@ -18,6 +18,7 @@ type LoginRequest struct {
 }
 
 type SessionInfo struct {
+	UserId   int    `json:"user_id,omitempty"`
 	Username string `json:"username,omitempty"`
 	IsValid  bool   `json:"is_valid"`
 }
@@ -31,7 +32,7 @@ func sessionHandler(r *mux.Router) {
 func getSessionValid(w http.ResponseWriter, r *http.Request) {
 	if IsValid(r) {
 		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(SessionInfo{Username: GetUsername(r), IsValid: true})
+		_ = json.NewEncoder(w).Encode(SessionInfo{UserId: GetUserId(r), Username: GetUsername(r), IsValid: true})
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)
 		_ = json.NewEncoder(w).Encode(SessionInfo{IsValid: false})
@@ -61,6 +62,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 		// Set some session values.
 		session.Values["authenticated"] = true
 		session.Values["username"] = login.Username
+		session.Values["id"] = user.Id
 		// Save it before we write to the response/return from the handler.
 		err := session.Save(r, w)
 		if err != nil {
@@ -99,6 +101,11 @@ func IsValid(r *http.Request) bool {
 func GetUsername(r *http.Request) string {
 	session, _ := store.Get(r, "claerance-session")
 	return session.Values["username"].(string)
+}
+
+func GetUserId(r *http.Request) int {
+	session, _ := store.Get(r, "claerance-session")
+	return session.Values["id"].(int)
 }
 
 func InitSessionStore() {

@@ -26,6 +26,8 @@ type Databaser interface {
 	GetUserByName(string) (users.User, error)
 	GetUserById(int) (users.User, error)
 	GetAllUsers() ([]users.User, error)
+	DeleteUserById(userId int) bool
+	UpdateUser(user users.User) (users.User, error)
 }
 
 func GetDatabase() Databaser {
@@ -127,6 +129,18 @@ func (d database) GetAllUsers() ([]users.User, error) {
 	}
 
 	return us, err
+}
+
+func (d database) UpdateUser(user users.User) (users.User, error) {
+	panic("implement me")
+}
+
+func (d database) DeleteUserById(userId int) bool {
+	query := `DELETE * FROM users WHERE id = ?`
+	result, _ := d.db.Exec(query, userId)
+	rowsAffected, err := result.RowsAffected()
+
+	return rowsAffected >= 1 && err == nil
 }
 
 func getUserFromQueryRow(row *sql.Row) (users.User, error) {

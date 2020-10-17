@@ -23,19 +23,25 @@ func CreateUser(username string, password string) error {
 }
 
 func GetUserById(userId int) (users.User, error) {
-	u, err := db.GetUserById(userId)
-
-	return u, err
+	return db.GetUserById(userId)
 }
 
 func GetUserByName(username string) (users.User, error) {
-	u, err := db.GetUserByName(username)
-
-	return u, err
+	return db.GetUserByName(username)
 }
 
 func GetAllUsers() ([]users.User, error) {
-	u, err := db.GetAllUsers()
+	return db.GetAllUsers()
+}
 
-	return u, err
+func DeleteUser(user users.User) bool {
+	return DeleteUserById(user.Id)
+}
+
+func DeleteUserById(userId int) bool {
+	return db.DeleteUserById(userId)
+}
+
+func UpdateUser(user users.User) (users.User, error) {
+	return db.UpdateUser(user)
 }

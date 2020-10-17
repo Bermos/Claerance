@@ -46,10 +46,20 @@ paths:
       responses:
         200:
           description: "Get detailed information about user"
+        404:
+          description: "No user with this id found"
     put:
       responses:
         200:
           description: "User info successfully updated"
+        404:
+          description: "No user with this id found"
+    delete:
+      responses:
+        204:
+          description: "User successfully deleted"
+        404:
+          description: "No user with this id found"
   /user/create:
     post:
       responses:

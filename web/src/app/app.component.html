@@ -6,7 +6,7 @@
     <div *ngIf="loggedIn">
       <button mat-button [matMenuTriggerFor]="userMenu">{{ username }}</button>
       <mat-menu #userMenu="matMenu">
-        <a mat-menu-item href="/user/self">Settings</a>
+        <a mat-menu-item href="/user/{{ userId }}">Account</a>
         <button (click)="logout()" mat-menu-item>Log out</button>
       </mat-menu>
     </div>

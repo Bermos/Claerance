@@ -33,3 +33,9 @@ func GetUserByName(username string) (users.User, error) {
 
 	return u, err
 }
+
+func GetAllUsers() ([]users.User, error) {
+	u, err := db.GetAllUsers()
+
+	return u, err
+}

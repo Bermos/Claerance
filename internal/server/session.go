@@ -3,6 +3,7 @@ package server
 import (
 	userManger "Claerance/internal/users/manager"
 	"encoding/json"
+	"github.com/gorilla/mux"
 	sess "github.com/gorilla/sessions"
 	"io/ioutil"
 	"log"
@@ -16,22 +17,9 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func handleSession(w http.ResponseWriter, r *http.Request, endpoint string) {
-	log.Printf("Session - handling %s request for %s", r.Method, endpoint)
-
-	switch endpoint {
-	case "session":
-		sessionBase(w, r)
-	}
-}
-
-func sessionBase(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "POST":
-		createSession(w, r)
-	case "DELETE":
-		destroySession(w, r)
-	}
+func sessionHandler(r *mux.Router) {
+	r.HandleFunc("/", createSession).Methods("POST")
+	r.HandleFunc("/", destroySession).Methods("DELETE")
 }
 
 func createSession(w http.ResponseWriter, r *http.Request) {

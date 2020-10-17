@@ -25,6 +25,7 @@ type Databaser interface {
 	AddUser(string, string) error
 	GetUserByName(string) (users.User, error)
 	GetUserById(int) (users.User, error)
+	GetAllUsers() ([]users.User, error)
 }
 
 func GetDatabase() Databaser {
@@ -115,7 +116,38 @@ func (d database) GetUserById(userId int) (users.User, error) {
 	return getUserFromQueryRow(row)
 }
 
+func (d database) GetAllUsers() ([]users.User, error) {
+	query := `SELECT * FROM users`
+	rows, err := d.db.Query(query)
+
+	var us []users.User
+	for rows.Next() {
+		user, _ := getUserFromQueryRows(rows)
+		us = append(us, user)
+	}
+
+	return us, err
+}
+
 func getUserFromQueryRow(row *sql.Row) (users.User, error) {
+	var u users.User
+	var email sql.NullString
+	var telegramID sql.NullInt32
+
+	err := row.Scan(&u.Id, &u.Username, &u.PwdHash, &u.CreatedAt, &email, &telegramID)
+
+	if email.Valid {
+		u.Email = email.String
+	}
+
+	if telegramID.Valid {
+		u.TelegramId = int(telegramID.Int32)
+	}
+
+	return u, err
+}
+
+func getUserFromQueryRows(row *sql.Rows) (users.User, error) {
 	var u users.User
 	var email sql.NullString
 	var telegramID sql.NullInt32

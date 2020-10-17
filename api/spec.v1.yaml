@@ -4,7 +4,7 @@ info:
   description: Claerance
   version: 1.0.0
 host: your-domain.tld
-basePath: /api/v1
+basePath: /api
 schemes:
   - https
 paths:

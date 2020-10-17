@@ -1,12 +1,17 @@
 package server
 
 import (
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
 
-func handleAuth(w http.ResponseWriter, r *http.Request, endpoint string) {
-	log.Printf("Auth - handling %s request for %s", r.Method, endpoint)
+func authHandler(r *mux.Router) {
+	r.HandleFunc("/", handleAuth)
+}
+
+func handleAuth(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Auth - handling %s request", r.Method)
 
 	session, _ := store.Get(r, "claerance-session")
 

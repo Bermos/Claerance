@@ -6,12 +6,12 @@ import (
 )
 
 type User struct {
-	Id         int
-	Username   string
-	PwdHash    string
-	CreatedAt  time.Time
-	Email      string
-	TelegramId int
+	Id         int       `json:"id"`
+	Username   string    `json:"username"`
+	PwdHash    string    `json:"-"`
+	CreatedAt  time.Time `json:"created_at"`
+	Email      string    `json:"email"`
+	TelegramId int       `json:"telegram_id"`
 }
 
 func newUser(id int, username string, pwdHash string, createdAt time.Time, email string, telegramId int) User {

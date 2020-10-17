@@ -4,10 +4,11 @@ import (
 	"Claerance/internal/users"
 	userManager "Claerance/internal/users/manager"
 	"encoding/json"
+	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"strings"
+	"strconv"
 )
 
 type CreateUserRequest struct {
@@ -15,33 +16,37 @@ type CreateUserRequest struct {
 	Password string `json:"password"`
 }
 
-type UserData struct {
-	Username  string `json:"username"`
-	CreatedAt string `json:"createdAt"`
-}
-
-func handleUser(w http.ResponseWriter, r *http.Request, endpoint string) {
-	log.Printf("User - handling %s request for %s", r.Method, endpoint)
-
-	switch endpoint {
-	case "user":
-		userBase(w, r)
-	case "user/create":
-		createUser(w, r)
-	default:
-		if strings.HasPrefix(endpoint, "user/") {
-			switch r.Method {
-			case "GET":
-				getUser(w, r)
-			}
-		} else {
-			w.WriteHeader(http.StatusNotFound)
-		}
-	}
+func userHandler(r *mux.Router) {
+	r.HandleFunc("/create", createUser).Methods("POST")
+	r.HandleFunc("/list", listUsers)
+	r.HandleFunc("/{id:[0-9]+}", getUser)
+	r.HandleFunc("/", userBase)
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {
-	userManager.GetUserById(1)
+	vars := mux.Vars(r)
+
+	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
+	user, err := userManager.GetUserById(int(userId))
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+	} else {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprint(w, encodeJson(user))
+	}
+}
+
+func listUsers(w http.ResponseWriter, r *http.Request) {
+	allUsers, err := userManager.GetAllUsers()
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, encodeJson(allUsers))
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {
@@ -64,5 +69,10 @@ func userBase(w http.ResponseWriter, r *http.Request) {
 	user, _ = userManager.GetUserByName(username)
 
 	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(UserData{Username: user.Username, CreatedAt: user.CreatedAt.String()})
+	fmt.Fprint(w, encodeJson(user))
+}
+
+func encodeJson(v interface{}) string {
+	userJson, _ := json.Marshal(v)
+	return string(userJson)
 }

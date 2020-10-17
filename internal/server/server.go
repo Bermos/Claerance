@@ -1,8 +1,8 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -16,8 +16,14 @@ type GenericMsg struct {
 
 // Start the server on the given port. This is blocking.
 func Start(port int) {
+	r := mux.NewRouter()
+
+	// Serve backend api
+	apiEndpoint(r.PathPrefix("/api").Subrouter())
+
 	// Serve static frontend page
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// TODO: fix abs path to prevent traversal
+	r.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		file, err := ioutil.ReadFile("web/public/" + r.URL.Path[1:])
 		if err != nil {
 			http.ServeFile(w, r, "web/public/index.html")
@@ -26,34 +32,17 @@ func Start(port int) {
 		}
 	})
 
-	// Serve backend api
-	http.HandleFunc("/api/", apiEndpoint)
-
 	// Start server, this function is blocking
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), r))
 }
 
-func apiEndpoint(w http.ResponseWriter, r *http.Request) {
-	urlParts := strings.Split(r.RequestURI, "/")
+func apiEndpoint(r *mux.Router) {
+	authHandler(r.PathPrefix("/auth").Subrouter())
+	userHandler(r.PathPrefix("/user").Subrouter())
+	sessionHandler(r.PathPrefix("/session").Subrouter())
 
-	if len(urlParts) < 4 {
+	// Catch faulty api requests
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Resource not found", http.StatusBadRequest)
-		return
-	}
-
-	if urlParts[2] != "v1" {
-		_ = json.NewEncoder(w).Encode(GenericMsg{Msg: "Unknown API version"})
-		http.Error(w, "Resource not found", http.StatusNotFound)
-		return
-	}
-
-	endpoint := strings.Join(urlParts[3:], "/")
-	switch urlParts[3] {
-	case "user":
-		handleUser(w, r, endpoint)
-	case "auth":
-		handleAuth(w, r, endpoint)
-	case "session":
-		handleSession(w, r, endpoint)
-	}
+	})
 }

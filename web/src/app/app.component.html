@@ -1,6 +1,16 @@
 <mat-toolbar>
   <span>{{ title }}</span>
   <span class="spacer"></span>
+  <span>
+    <a *ngIf="!loggedIn" mat-button href="/login">Log in</a>
+    <div *ngIf="loggedIn">
+      <button mat-button [matMenuTriggerFor]="userMenu">{{ username }}</button>
+      <mat-menu #userMenu="matMenu">
+        <a mat-menu-item href="/user/self">Settings</a>
+        <button (click)="logout()" mat-menu-item>Log out</button>
+      </mat-menu>
+    </div>
+  </span>
 </mat-toolbar>
 
 <div class="content-body">

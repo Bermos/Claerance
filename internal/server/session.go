@@ -17,9 +17,25 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+type SessionInfo struct {
+	Username string `json:"username,omitempty"`
+	IsValid  bool   `json:"is_valid"`
+}
+
 func sessionHandler(r *mux.Router) {
 	r.HandleFunc("/", createSession).Methods("POST")
 	r.HandleFunc("/", destroySession).Methods("DELETE")
+	r.HandleFunc("/", getSessionValid).Methods("GET")
+}
+
+func getSessionValid(w http.ResponseWriter, r *http.Request) {
+	if IsValid(r) {
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(SessionInfo{Username: GetUsername(r), IsValid: true})
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(SessionInfo{IsValid: false})
+	}
 }
 
 func createSession(w http.ResponseWriter, r *http.Request) {
@@ -60,7 +76,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 }
 
 func destroySession(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "sso-session")
+	session, _ := store.Get(r, "claerance-session")
 
 	// Revoke users authentication
 	session.Values["authenticated"] = false

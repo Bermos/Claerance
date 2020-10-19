@@ -9,9 +9,9 @@ type User struct {
 	Id         int       `json:"id"`
 	Username   string    `json:"username"`
 	PwdHash    string    `json:"-"`
-	CreatedAt  time.Time `json:"created_at"`
+	CreatedAt  time.Time `json:"createdAt"`
 	Email      string    `json:"email"`
-	TelegramId int       `json:"telegram_id"`
+	TelegramId int       `json:"telegramId"`
 }
 
 func newUser(id int, username string, pwdHash string, createdAt time.Time, email string, telegramId int) User {

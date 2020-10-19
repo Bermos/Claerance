@@ -4,7 +4,9 @@
   <span>
     <a *ngIf="!loggedIn" mat-button href="/login">Log in</a>
     <div *ngIf="loggedIn">
-      <button mat-button [matMenuTriggerFor]="userMenu">{{ username }}</button>
+      <button mat-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon> {{ username }}
+      </button>
       <mat-menu #userMenu="matMenu">
         <a mat-menu-item href="/user/{{ userId }}">Account</a>
         <button (click)="logout()" mat-menu-item>Log out</button>

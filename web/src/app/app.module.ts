@@ -14,6 +14,7 @@ import { AppRoutingModule } from './app-routing/app-routing.module';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserComponent } from './user/user.component';
+import { MatIconModule } from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -22,18 +23,19 @@ import { UserComponent } from './user/user.component';
     DashboardComponent,
     UserComponent
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        MatToolbarModule,
-        MatCardModule,
-        MatInputModule,
-        MatButtonModule,
-        FormsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        MatMenuModule
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatInputModule,
+    MatButtonModule,
+    FormsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    MatMenuModule,
+    MatIconModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })

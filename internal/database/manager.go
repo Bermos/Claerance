@@ -21,13 +21,14 @@ type database struct {
 }
 
 type Databaser interface {
-	createTableFromFile(string)
+	createTableFromFile(string, bool)
 	AddUser(string, string) error
 	GetUserByName(string) (users.User, error)
 	GetUserById(int) (users.User, error)
 	GetAllUsers() ([]users.User, error)
 	DeleteUserById(userId int) bool
 	UpdateUser(user users.User) (users.User, error)
+	tableExists(string) bool
 }
 
 func GetDatabase() Databaser {
@@ -70,12 +71,17 @@ func newDatabase() Databaser {
 	}
 
 	d := &database{db}
-	d.createTableFromFile("users")
+	d.createTableFromFile("users", false)
 
 	return d
 }
 
-func (d database) createTableFromFile(tablename string) {
+func (d database) createTableFromFile(tablename string, overwrite bool) {
+	if !overwrite && d.tableExists(tablename) {
+		log.Printf("Table '%s' already exists, skipping...", tablename)
+		return
+	}
+
 	filename := fmt.Sprintf("internal/database/%s/%s.sql", dbDriver, tablename)
 	statement, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -83,14 +89,19 @@ func (d database) createTableFromFile(tablename string) {
 		return
 	}
 
-	res, err := d.db.Exec(string(statement))
+	_, err = d.db.Exec(string(statement))
 	if err != nil {
-		log.Println("Table already exists, skipping...")
+		log.Printf("Error while creating table '%s'. Aborting...", tablename)
 		log.Fatal(err)
 	} else {
-		log.Println(res.LastInsertId()) // TODO find how to check if success
 		log.Printf("Table %s created", tablename)
 	}
+}
+
+func (d database) tableExists(tablename string) bool {
+	res, err := d.db.Exec(`SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?`, tablename)
+	nRows, _ := res.RowsAffected()
+	return err == nil && nRows == 1
 }
 
 func (d database) AddUser(username string, hashedPW string) error {
@@ -136,7 +147,7 @@ func (d database) UpdateUser(user users.User) (users.User, error) {
 }
 
 func (d database) DeleteUserById(userId int) bool {
-	query := `DELETE * FROM users WHERE id = ?`
+	query := `DELETE FROM users WHERE id = ?`
 	result, _ := d.db.Exec(query, userId)
 	rowsAffected, err := result.RowsAffected()
 

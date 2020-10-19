@@ -25,4 +25,11 @@ export class UserComponent implements OnInit {
   editUser() {
     console.log("Implement me edit mode")
   }
+
+  deleteUser() {
+    this.us.deleteUser(this.user.id).subscribe(
+      () => this.router.navigate(['/dashboard']),
+      err => console.log("Could not delete user.", err)
+    )
+  }
 }

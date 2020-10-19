@@ -41,6 +41,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(user)
 	} else {
+		w.WriteHeader(http.StatusInternalServerError)
 		log.Println(err)
 	}
 }

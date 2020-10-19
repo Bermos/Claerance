@@ -13,8 +13,8 @@ var (
 func Setup() {
 	db = database.GetDatabase()
 
-	CreateUser("bermos", "test")
-	CreateUser("test", "test")
+	CreateUser("Bermos", "test")
+	CreateUser("Test", "test")
 }
 
 func CreateUser(username string, password string) error {

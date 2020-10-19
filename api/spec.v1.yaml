@@ -18,6 +18,8 @@ paths:
       summary: "Authenticate to clearance"
   /session:
     post:
+      summary: "Login and create new session"
+      consumes: "application/json"
       responses:
         201:
           description: "Session created"

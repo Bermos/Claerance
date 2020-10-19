@@ -9,14 +9,13 @@ import { User } from "./user.struct";
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit {
-  userId: number;
   user: User;
 
   constructor(private route: ActivatedRoute, private router: Router, private us: UserService) { }
 
   ngOnInit() {
-    this.userId = +this.route.snapshot.paramMap.get('id');
-    this.us.getUser(this.userId).subscribe(
+    const userId = +this.route.snapshot.paramMap.get('id');
+    this.us.getUser(userId).subscribe(
       user => this.user = user,
       () => this.router.navigate(['/dashboard'])
     )

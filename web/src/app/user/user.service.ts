@@ -22,7 +22,7 @@ export class UserService {
    * Retrieves details of all users.
    */
   public getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>('api/user/')
+    return this.http.get<User[]>('api/user/list')
   }
 
   /**

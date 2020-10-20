@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject, Subscriber } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Session } from "./session.struct";
 
 @Injectable({

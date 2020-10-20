@@ -10,7 +10,7 @@ import { UserService } from "../user/user.service";
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['username'];
+  displayedColumns: string[] = ['username', 'createdAt'];
   usersDataSource = new MatTableDataSource<User>()
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
@@ -26,4 +26,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     )
   }
 
+  applyFilter(event: KeyboardEvent) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.usersDataSource.filter = filterValue.trim().toLowerCase();
+  }
 }

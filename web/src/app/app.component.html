@@ -2,13 +2,13 @@
   <span>{{ title }}</span>
   <span class="spacer"></span>
   <span>
-    <a *ngIf="!loggedIn" mat-button href="/login">Log in</a>
-    <div *ngIf="loggedIn">
+    <a *ngIf="!session?.isValid" mat-button routerLink="/login">Log in</a>
+    <div *ngIf="session?.isValid">
       <button mat-button [matMenuTriggerFor]="userMenu">
-        <mat-icon>account_circle</mat-icon> {{ username }}
+        <mat-icon>account_circle</mat-icon> {{ session.username }}
       </button>
       <mat-menu #userMenu="matMenu">
-        <a mat-menu-item href="/user/{{ userId }}">Account</a>
+        <a mat-menu-item href="/user/{{ session.userId }}">Account</a>
         <button (click)="logout()" mat-menu-item>Log out</button>
       </mat-menu>
     </div>

@@ -18,9 +18,9 @@ type LoginRequest struct {
 }
 
 type SessionInfo struct {
-	UserId   int    `json:"user_id,omitempty"`
+	UserId   int    `json:"userId,omitempty"`
 	Username string `json:"username,omitempty"`
-	IsValid  bool   `json:"is_valid"`
+	IsValid  bool   `json:"isValid"`
 }
 
 func sessionHandler(r *mux.Router) {

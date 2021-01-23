@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { SessionService } from '../auth/session.service';
+import { SessionService } from '../session/session.service';
 
 @Component({
   selector: 'app-login',
@@ -18,11 +18,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     // TODO: fix automatic redirection if already logged in
     this.sess.isAuthenticated().subscribe(
-      () => {
-        this.router.navigate(['/dashboard']);
-      },
-      res => {
-        if (res.status !== 401) {
+      session => {
+        if (session.isValid) {
           this.router.navigate(['/dashboard']);
         }
       }
@@ -38,6 +35,9 @@ export class LoginComponent implements OnInit {
     this.http.post(this.sessionsUrl, {
       username: this.username,
       password: this.password
-    }).subscribe(() => this.router.navigate(['/dashboard']));
+    }).subscribe(() => {
+      this.sess.update();
+      this.router.navigate(['/dashboard']);
+    });
   }
 }

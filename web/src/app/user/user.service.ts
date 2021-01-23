@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User } from "./user.struct";
+import { User } from './user.struct';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +22,7 @@ export class UserService {
    * Retrieves details of all users.
    */
   public getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>('api/user/list')
+    return this.http.get<User[]>('api/user/list');
   }
 
   /**
@@ -30,7 +30,7 @@ export class UserService {
    * @param user to be updated with updated attributes
    */
   public updateUser(user: User): Observable<any> {
-    return this.http.put(`api/user/${user.id}`, user)
+    return this.http.put(`api/user/${user.id}`, user);
   }
 
   /**
@@ -38,6 +38,6 @@ export class UserService {
    * @param id of the user to be deleted
    */
   public deleteUser(id: number): Observable<any> {
-    return this.http.delete(`api/user/${id}`)
+    return this.http.delete(`api/user/${id}`);
   }
 }

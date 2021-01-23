@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from "./user.service";
-import { User } from "./user.struct";
+import { UserService } from './user.service';
+import { User } from './user.struct';
 
 @Component({
   selector: 'app-user',
@@ -18,17 +18,17 @@ export class UserComponent implements OnInit {
     this.us.getUser(userId).subscribe(
       user => this.user = user,
       () => this.router.navigate(['/dashboard'])
-    )
+    );
   }
 
   editUser() {
-    console.log("Implement me edit mode")
+    console.log('Implement me edit mode');
   }
 
   deleteUser() {
     this.us.deleteUser(this.user.id).subscribe(
       () => this.router.navigate(['/dashboard']),
-      err => console.log("Could not delete user.", err)
-    )
+      err => console.log('Could not delete user.', err)
+    );
   }
 }

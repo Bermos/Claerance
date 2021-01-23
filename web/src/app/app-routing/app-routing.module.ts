@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from '../login/login.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { UserComponent } from '../user/user.component';
-import { UsersComponent } from "../users/users.component";
+import { UsersComponent } from '../users/users.component';
 
 /*
 Routing list, can't use /api route for anything since the go server will catch it an use for itself.

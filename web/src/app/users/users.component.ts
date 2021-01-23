@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from "@angular/material/table";
-import { User } from "../user/user.struct";
-import { MatPaginator } from "@angular/material/paginator";
-import { UserService } from "../user/user.service";
+import { MatTableDataSource } from '@angular/material/table';
+import { User } from '../user/user.struct';
+import { MatPaginator } from '@angular/material/paginator';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'app-users',
@@ -11,7 +11,7 @@ import { UserService } from "../user/user.service";
 })
 export class UsersComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['username', 'createdAt'];
-  usersDataSource = new MatTableDataSource<User>()
+  usersDataSource = new MatTableDataSource<User>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   ngAfterViewInit() {
@@ -23,7 +23,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.us.getAllUsers().subscribe(
       users => this.usersDataSource.data = users
-    )
+    );
   }
 
   applyFilter(event: KeyboardEvent) {

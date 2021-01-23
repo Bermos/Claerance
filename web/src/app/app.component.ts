@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SessionService } from './session/session.service';
-import { Session } from "./session/session.struct";
+import { Session } from './session/session.struct';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.sess.isAuthenticated().subscribe(
       session => this.session = session,
-      () => this.session = SessionService.null_session
+      () => this.session = SessionService.nullSession
     );
   }
 

@@ -1,7 +1,7 @@
 export class Session {
-  userId: number
-  isValid: boolean
-  username: string
+  userId: number;
+  isValid: boolean;
+  username: string;
 
   constructor(userId: number, isValid: boolean, username: string) {
     this.userId = userId;

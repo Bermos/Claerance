@@ -1,12 +1,10 @@
-swagger: "2.0"
+openapi: 3.0.3
 info:
   title: Claerance
   description: Claerance
   version: 1.0.0
-host: your-domain.tld
-basePath: /api
-schemes:
-  - https
+servers:
+  - url: 'https://your-domain.tld'
 paths:
   /auth:
     get:

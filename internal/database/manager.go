@@ -16,6 +16,10 @@ var (
 	dbDriver string
 )
 
+type tableCountRes struct {
+	TableCount int
+}
+
 type database struct {
 	db *sql.DB
 }
@@ -99,9 +103,11 @@ func (d database) createTableFromFile(tablename string, overwrite bool) {
 }
 
 func (d database) tableExists(tablename string) bool {
-	res, err := d.db.Exec(`SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?`, tablename)
-	nRows, _ := res.RowsAffected()
-	return err == nil && nRows == 1
+	query := `SELECT COUNT(name) AS tableCount FROM sqlite_master WHERE type = 'table' AND name = ?`
+	row := d.db.QueryRow(query, tablename)
+	scanRes := new(tableCountRes)
+	err := row.Scan(&scanRes.TableCount)
+	return err == nil && scanRes.TableCount == 1
 }
 
 func (d database) AddUser(username string, hashedPW string) error {

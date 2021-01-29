@@ -27,7 +27,7 @@ type Databaser interface {
 	GetUserById(int) (users.User, error)
 	GetAllUsers() ([]users.User, error)
 	DeleteUserById(userId int) bool
-	UpdateUser(user users.User) (users.User, error)
+	UpdateUser(user users.User) error
 	tableExists(string) bool
 }
 
@@ -142,8 +142,15 @@ func (d database) GetAllUsers() ([]users.User, error) {
 	return us, err
 }
 
-func (d database) UpdateUser(user users.User) (users.User, error) {
-	panic("implement me")
+func (d database) UpdateUser(user users.User) error {
+	query := `UPDATE users SET email = ?, telegram_id = ? WHERE id = ?`
+	result, err := d.db.Exec(query, user.Id)
+
+	if rowsAffected, _ := result.RowsAffected(); err == nil && rowsAffected != 1 {
+		err = fmt.Errorf("no changes made")
+	}
+
+	return err
 }
 
 func (d database) DeleteUserById(userId int) bool {

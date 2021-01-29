@@ -37,7 +37,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if user, err := userManager.UpdateUser(user); err == nil {
+	if err := userManager.UpdateUser(user); err == nil {
 		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(user)
 	} else {

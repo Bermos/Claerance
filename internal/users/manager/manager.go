@@ -42,6 +42,6 @@ func DeleteUserById(userId int) bool {
 	return db.DeleteUserById(userId)
 }
 
-func UpdateUser(user users.User) (users.User, error) {
+func UpdateUser(user users.User) error {
 	return db.UpdateUser(user)
 }

@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS users (
     password TEXT NOT NULL,
     created_at DATETIME DEFAULT current_timestamp,
     email TEXT,
-    telegram_it INTEGER
+    telegram_id INTEGER
 )

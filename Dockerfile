@@ -1,8 +1,9 @@
 # Build backend
 FROM golang:1.17.1-alpine AS backend
 
-WORKDIR /build
+RUN apk add g++
 
+WORKDIR /build
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
@@ -18,10 +19,11 @@ FROM node:alpine AS frontend
 WORKDIR /build
 
 COPY web/package.json .
+COPY web/package-lock.json .
 RUN npm install
 
 COPY web .
-RUN ./node_modules/.bin/ng build --prod --source-map
+RUN ./node_modules/.bin/ng build --configuration production --source-map
 
 
 # Deploy stage
@@ -29,7 +31,8 @@ FROM alpine
 
 WORKDIR /app
 COPY --from=backend /build/claerence ./claerence
-COPY --from=frontend /build/public/ ./public/
+COPY internal/database/sqlite3 internal/database/sqlite3
+COPY --from=frontend /build/public/ ./web/public/
 
 EXPOSE 1401
 

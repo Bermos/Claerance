@@ -15,10 +15,10 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     const userId = +this.route.snapshot.paramMap.get('id');
-    this.us.getUser(userId).subscribe(
-      user => this.user = user,
-      () => this.router.navigate(['/dashboard'])
-    );
+    this.us.getUser(userId).subscribe({
+      next: (user) => this.user = user,
+      error: () => this.router.navigate(['/dashboard'])
+    });
   }
 
   editUser() {

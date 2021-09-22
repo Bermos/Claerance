@@ -21,9 +21,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
   constructor(private us: UserService) { }
 
   ngOnInit(): void {
-    this.us.getAllUsers().subscribe(
-      users => this.usersDataSource.data = users
-    );
+    this.us.getAllUsers().subscribe({
+      next: (users) => this.usersDataSource.data = users
+    });
   }
 
   applyFilter(event: KeyboardEvent) {

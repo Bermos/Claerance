@@ -13,18 +13,18 @@ export class SessionService {
   constructor(private http: HttpClient) { }
 
   public isAuthenticated(): Observable<Session> {
-    this.http.get<Session>('api/session/', ).subscribe(
-      sess => { SessionService.session.next(sess); },
-      () => SessionService.session.next(SessionService.nullSession)
-    );
+    this.http.get<Session>('api/session/', ).subscribe({
+      next: (sess) => { SessionService.session.next(sess); },
+      error: () => SessionService.session.next(SessionService.nullSession)
+    });
     return SessionService.session;
   }
 
   public logout(): Observable<Session> {
-    this.http.delete<Session>('api/session/').subscribe(
-      () => SessionService.session.next(SessionService.nullSession),
-      () => SessionService.session.error('Something went wrong')
-    );
+    this.http.delete<Session>('api/session/').subscribe({
+      next: () => SessionService.session.next(SessionService.nullSession),
+      error: () => SessionService.session.error('Something went wrong')
+    });
     return SessionService.session;
   }
 

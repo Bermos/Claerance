@@ -15,10 +15,10 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.sess.isAuthenticated().subscribe(
-      session => this.session = session,
-      () => this.session = SessionService.nullSession
-    );
+    this.sess.isAuthenticated().subscribe({
+      next: (session) => this.session = session,
+      error: () => this.session = SessionService.nullSession
+    });
   }
 
   logout() {

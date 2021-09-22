@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS users (
     created_at DATETIME DEFAULT current_timestamp,
     email TEXT,
     telegram_id INTEGER
-)
+);

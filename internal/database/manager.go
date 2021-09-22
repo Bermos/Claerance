@@ -30,7 +30,7 @@ type Databaser interface {
 	GetUserById(int) (users.User, error)
 	GetAllUsers() ([]users.User, error)
 	DeleteUserById(userId int) bool
-	UpdateUser(user users.User) error
+	UpdateUser(users.User) error
 	tableExists(string) bool
 }
 
@@ -88,7 +88,7 @@ func (d database) createTableFromFile(tablename string, overwrite bool) {
 	filename := fmt.Sprintf("internal/database/%s/%s.sql", dbDriver, tablename)
 	statement, err := ioutil.ReadFile(filename)
 	if err != nil {
-		log.Printf("ERROR - Could not read file %s", tablename+".sql")
+		log.Printf("ERROR - Could not read file %s", filename)
 		return
 	}
 

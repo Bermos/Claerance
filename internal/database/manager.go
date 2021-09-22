@@ -75,6 +75,11 @@ func newDatabase() Databaser {
 
 	d := &database{db}
 	d.createTableFromFile("users", false)
+	d.createTableFromFile("roles", false)
+	d.createTableFromFile("sites", false)
+	d.createTableFromFile("user_roles", false)
+	d.createTableFromFile("user_sites", false)
+	d.createTableFromFile("role_sites", false)
 
 	return d
 }

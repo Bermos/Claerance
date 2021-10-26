@@ -39,6 +39,8 @@ func Start(port int) {
 func apiEndpoint(r *mux.Router) {
 	authHandler(r.PathPrefix("/auth").Subrouter())
 	userHandler(r.PathPrefix("/user").Subrouter())
+	siteHandler(r.PathPrefix("/site").Subrouter())
+	roleHandler(r.PathPrefix("/role").Subrouter())
 	sessionHandler(r.PathPrefix("/session").Subrouter())
 
 	// Catch faulty api requests

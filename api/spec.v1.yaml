@@ -64,3 +64,29 @@ paths:
       responses:
         201:
           description: "User successfully created"
+
+  /sites/list:
+    get:
+      responses:
+        200:
+          description: "List all sites known to claerance"
+
+  /sites/{id}:
+    get:
+      responses:
+        200:
+          description: "Get detailed information about a site"
+        404:
+          description: "No site with this id was found"
+    put:
+      responses:
+        200:
+          description: "Update information about a site"
+        404:
+          description: "No site with this id was found"
+    delete:
+      responses:
+        204:
+          description: "Delete site"
+        404:
+          description: "No site with this id was found"

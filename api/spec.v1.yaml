@@ -8,6 +8,8 @@ servers:
 paths:
   /auth:
     get:
+      tags:
+        - auth
       responses:
         200:
           description: "Authentication successful"
@@ -16,6 +18,8 @@ paths:
       summary: "Authenticate to clearance"
   /session:
     post:
+      tags:
+        - session
       summary: "Login and create new session"
       responses:
         201:
@@ -23,16 +27,22 @@ paths:
         403:
           description: "Not authorized"
     delete:
+      tags:
+        - session
       responses:
         200:
           description: "Session deleted"
   /session/{id}:
     delete:
+      tags:
+        - session
       responses:
         200:
           description: "Session deleted"
   /user/list:
     get:
+      tags:
+        - user
       responses:
         200:
           description: "Get list of all users"
@@ -42,18 +52,24 @@ paths:
           description: "Not authorized"
   /user/{id}:
     get:
+      tags:
+        - user
       responses:
         200:
           description: "Get detailed information about user"
         404:
           description: "No user with this id found"
     put:
+      tags:
+        - user
       responses:
         200:
           description: "User info successfully updated"
         404:
           description: "No user with this id found"
     delete:
+      tags:
+        - user
       responses:
         204:
           description: "User successfully deleted"
@@ -61,30 +77,40 @@ paths:
           description: "No user with this id found"
   /user/create:
     post:
+      tags:
+        - user
       responses:
         201:
           description: "User successfully created"
 
-  /sites/list:
+  /site/list:
     get:
+      tags:
+        - site
       responses:
         200:
           description: "List all sites known to claerance"
 
-  /sites/{id}:
+  /site/{id}:
     get:
+      tags:
+        - site
       responses:
         200:
           description: "Get detailed information about a site"
         404:
           description: "No site with this id was found"
     put:
+      tags:
+        - site
       responses:
         200:
           description: "Update information about a site"
         404:
           description: "No site with this id was found"
     delete:
+      tags:
+        - site
       responses:
         204:
           description: "Delete site"

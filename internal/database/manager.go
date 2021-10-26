@@ -40,7 +40,7 @@ func SetURI(uri string) {
 
 func Connect() {
 	if dbDriver == "" {
-		log.Fatal("trying to initiate db without driver being set. Abort.")
+		log.Fatal("ERROR - trying to initiate db without driver being set. Abort.")
 	}
 
 	var err error
@@ -48,6 +48,6 @@ func Connect() {
 	if err != nil {
 		log.Fatal(err)
 	} else {
-		log.Println("Database connection established")
+		log.Println("INFO - Database connection established")
 	}
 }

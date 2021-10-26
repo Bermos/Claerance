@@ -1,10 +1,15 @@
 Claerance
 ---------
 
-This project intends to be a user-friendly, easy to set-up authentication
+This project intends to be a user-friendly, easy to set up authentication
 "middleware" for [Traefik](https://github.com/containous/traefik).
 
-### How-to's
+## How-to's
+
+### Docker
+#### Building and running
+Build: `docker build . -t claerance`
+Run: `docker run claerance`
 
 #### Building and running
 Build: `go build -o claerance ./cmd/main.go`  

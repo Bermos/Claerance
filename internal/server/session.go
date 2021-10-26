@@ -1,7 +1,7 @@
 package server
 
 import (
-	userManger "Claerance/internal/users/manager"
+	"Claerance/internal/users"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	sess "github.com/gorilla/sessions"
@@ -18,7 +18,7 @@ type LoginRequest struct {
 }
 
 type SessionInfo struct {
-	UserId   int    `json:"userId,omitempty"`
+	UserId   uint   `json:"userId,omitempty"`
 	Username string `json:"username,omitempty"`
 	IsValid  bool   `json:"isValid"`
 }
@@ -54,7 +54,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 	device := r.Header.Get("User-Agent")*/
 	log.Println("login from:", login.Username, "with:", login.Password)
 
-	user, _ := userManger.GetUserByName(login.Username)
+	user, _ := users.GetUserByName(login.Username)
 	if user.CheckPassword(login.Password) {
 		log.Println("Login successful")
 
@@ -62,7 +62,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 		// Set some session values.
 		session.Values["authenticated"] = true
 		session.Values["username"] = login.Username
-		session.Values["id"] = user.Id
+		session.Values["id"] = user.ID
 		// Save it before we write to the response/return from the handler.
 		err := session.Save(r, w)
 		if err != nil {
@@ -103,9 +103,9 @@ func GetUsername(r *http.Request) string {
 	return session.Values["username"].(string)
 }
 
-func GetUserId(r *http.Request) int {
+func GetUserId(r *http.Request) uint {
 	session, _ := store.Get(r, "claerance-session")
-	return session.Values["id"].(int)
+	return session.Values["id"].(uint)
 }
 
 func InitSessionStore() {

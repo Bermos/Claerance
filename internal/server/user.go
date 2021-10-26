@@ -2,7 +2,6 @@ package server
 
 import (
 	"Claerance/internal/users"
-	userManager "Claerance/internal/users/manager"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -30,14 +29,14 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
 
-	user, err := userManager.GetUserById(int(userId))
+	user, err := users.GetUserById(int(userId))
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		_ = json.NewEncoder(w).Encode(GenericMsg{Msg: "No user with this id found."})
 		return
 	}
 
-	if err := userManager.UpdateUser(user); err == nil {
+	if err := users.UpdateUser(user); err == nil {
 		w.WriteHeader(http.StatusOK)
 		_ = json.NewEncoder(w).Encode(user)
 	} else {
@@ -49,7 +48,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 func deleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
-	success := userManager.DeleteUserById(int(userId))
+	success := users.DeleteUserById(int(userId))
 
 	if success {
 		w.WriteHeader(http.StatusOK)
@@ -61,7 +60,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 func getUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
-	user, err := userManager.GetUserById(int(userId))
+	user, err := users.GetUserById(int(userId))
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -72,7 +71,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func listUsers(w http.ResponseWriter, r *http.Request) {
-	allUsers, err := userManager.GetAllUsers()
+	allUsers, err := users.GetAllUsers()
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -94,13 +93,13 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &user)
 
-	userManager.CreateUser(user.Username, user.Password)
+	users.CreateUser(user.Username, user.Password)
 }
 
 func userBase(w http.ResponseWriter, r *http.Request) {
 	username := GetUsername(r)
 	var user users.User
-	user, _ = userManager.GetUserByName(username)
+	user, _ = users.GetUserByName(username)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, encodeJson(user))

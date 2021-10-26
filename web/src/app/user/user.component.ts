@@ -26,7 +26,7 @@ export class UserComponent implements OnInit {
   }
 
   deleteUser() {
-    this.us.deleteUser(this.user.id).subscribe(
+    this.us.deleteUser(this.user.ID).subscribe(
       () => this.router.navigate(['/dashboard']),
       err => console.log('Could not delete user.', err)
     );

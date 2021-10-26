@@ -1,7 +1,7 @@
 export class User {
-  public id: number;
+  public ID: number;
   public username: string;
-  public createdAt;
+  public CreatedAt;
   public email: string;
   public telegramId: number;
 }

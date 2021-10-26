@@ -30,7 +30,7 @@ export class UserService {
    * @param user to be updated with updated attributes
    */
   public updateUser(user: User): Observable<any> {
-    return this.http.put(`api/user/${user.id}`, user);
+    return this.http.put(`api/user/${user.ID}`, user);
   }
 
   /**

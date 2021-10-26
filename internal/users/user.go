@@ -54,7 +54,7 @@ func CreateUser(username string, password string) {
 	})
 }
 
-func GetUserById(userId int) (User, error) {
+func GetUserById(userId uint) (User, error) {
 	var user User
 	result := db.First(&user, userId)
 	return user, result.Error
@@ -77,7 +77,7 @@ func DeleteUser(user User) bool {
 	return result.RowsAffected == 1
 }
 
-func DeleteUserById(userId int) bool {
+func DeleteUserById(userId uint) bool {
 	result := db.Delete(&User{}, userId)
 	return result.RowsAffected == 1
 }

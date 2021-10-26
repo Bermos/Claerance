@@ -29,7 +29,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
 
-	user, err := users.GetUserById(int(userId))
+	user, err := users.GetUserById(uint(userId))
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		_ = json.NewEncoder(w).Encode(GenericMsg{Msg: "No user with this id found."})
@@ -48,7 +48,7 @@ func updateUser(w http.ResponseWriter, r *http.Request) {
 func deleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
-	success := users.DeleteUserById(int(userId))
+	success := users.DeleteUserById(uint(userId))
 
 	if success {
 		w.WriteHeader(http.StatusOK)
@@ -60,7 +60,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 func getUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	userId, _ := strconv.ParseInt(vars["id"], 0, 64)
-	user, err := users.GetUserById(int(userId))
+	user, err := users.GetUserById(uint(userId))
 
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -97,9 +97,9 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func userBase(w http.ResponseWriter, r *http.Request) {
-	username := GetUsername(r)
+	userId := GetUserId(r)
 	var user users.User
-	user, _ = users.GetUserByName(username)
+	user, _ = users.GetUserById(userId)
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, encodeJson(user))

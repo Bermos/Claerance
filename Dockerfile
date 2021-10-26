@@ -31,7 +31,6 @@ FROM alpine
 
 WORKDIR /app
 COPY --from=backend /build/claerence ./claerence
-COPY internal/database/sqlite3 internal/database/sqlite3
 COPY --from=frontend /build/public/ ./web/public/
 
 EXPOSE 1401

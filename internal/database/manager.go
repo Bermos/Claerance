@@ -50,6 +50,4 @@ func Connect() {
 	} else {
 		log.Println("Database connection established")
 	}
-
-	// Migrate schemas
 }

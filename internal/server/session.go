@@ -55,7 +55,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 	log.Println("login from:", login.Username, "with:", login.Password)
 
 	user, _ := users.GetUserByName(login.Username)
-	if user.CheckPassword(login.Password) {
+	if users.CheckPassword(user, login.Password) {
 		log.Println("Login successful")
 
 		session, _ := store.Get(r, "claerance-session")

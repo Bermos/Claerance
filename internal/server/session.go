@@ -109,9 +109,9 @@ func GetUserId(r *http.Request) uint {
 }
 
 func InitSessionStore() {
-	log.Println("Setting up sessions store")
+	log.Println("INFO - Setting up sessions store")
 	key := []byte("asdjfadfasbfasdhfajk")
-	log.Printf("Key length: %d", len(key))
+	log.Printf("INFO - Key length: %d", len(key))
 	store = sess.NewCookieStore(key)
 
 	store.Options = &sess.Options{
@@ -121,5 +121,5 @@ func InitSessionStore() {
 		HttpOnly: true,
 	}
 
-	log.Println("Sessions store setup")
+	log.Println("INFO - Sessions store setup")
 }

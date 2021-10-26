@@ -99,7 +99,7 @@ func (d database) createTableFromFile(tablename string, overwrite bool) {
 
 	_, err = d.db.Exec(string(statement))
 	if err != nil {
-		log.Printf("Error while creating table '%s'. Aborting...", tablename)
+		log.Printf("ERROR -  Can't create table '%s'. Aborting...", tablename)
 		log.Fatal(err)
 	} else {
 		log.Printf("Table %s created", tablename)

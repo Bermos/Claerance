@@ -8,9 +8,10 @@ This project intends to be a user-friendly, easy to set up authentication
 
 ### Docker
 #### Building and running
-Build: `docker build . -t claerance`
+Build: `docker build . -t claerance`  
 Run: `docker run claerance`
 
+### Not Docker
 #### Building and running
 Build: `go build -o claerance ./cmd/main.go`  
 Run: `./claerance`

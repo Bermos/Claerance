@@ -1,7 +1,8 @@
 .login-card {
-  max-width: 600px;
+  margin: auto;
+  max-width: 500px;
 }
 
 .login-input {
-  width: 70%;
+  width: 90%;
 }

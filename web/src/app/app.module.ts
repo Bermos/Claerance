@@ -21,6 +21,10 @@ import { UsersComponent } from './users/users.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { SiteComponent } from './site/site.component';
+import { RoleComponent } from './role/role.component';
+import { SitesComponent } from './sites/sites.component';
+import { UserCreateComponent } from './user-create/user-create.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +32,11 @@ import { MatSortModule } from '@angular/material/sort';
     LoginComponent,
     DashboardComponent,
     UserComponent,
-    UsersComponent
+    UsersComponent,
+    SiteComponent,
+    RoleComponent,
+    SitesComponent,
+    UserCreateComponent
   ],
   imports: [
     BrowserModule,

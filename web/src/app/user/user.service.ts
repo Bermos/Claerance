@@ -7,6 +7,7 @@ import { User } from './user.struct';
   providedIn: 'root'
 })
 export class UserService {
+  apiPath = 'api/user';
 
   constructor(private http: HttpClient) { }
 
@@ -15,14 +16,14 @@ export class UserService {
    * @param id of the requested user
    */
   public getUser(id: number): Observable<User> {
-    return this.http.get<User>(`api/user/${id}`);
+    return this.http.get<User>(`${this.apiPath}/${id}`);
   }
 
   /**
    * Retrieves details of all users.
    */
   public getAllUsers(): Observable<User[]> {
-    return this.http.get<User[]>('api/user/list');
+    return this.http.get<User[]>(`${this.apiPath}/list`);
   }
 
   /**
@@ -30,7 +31,19 @@ export class UserService {
    * @param user to be updated with updated attributes
    */
   public updateUser(user: User): Observable<any> {
-    return this.http.put(`api/user/${user.ID}`, user);
+    return this.http.put(`${this.apiPath}/${user.ID}`, user);
+  }
+
+  /**
+   * Sends a creation request to the server
+   * @param username for the new user
+   * @param password for the new user
+   */
+  public createUser(username: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiPath}/create`, {
+      username,
+      password
+    });
   }
 
   /**
@@ -38,6 +51,6 @@ export class UserService {
    * @param id of the user to be deleted
    */
   public deleteUser(id: number): Observable<any> {
-    return this.http.delete(`api/user/${id}`);
+    return this.http.delete(`${this.apiPath}/${id}`);
   }
 }

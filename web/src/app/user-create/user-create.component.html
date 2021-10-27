@@ -1,0 +1,21 @@
+<mat-card>
+  <mat-card-content>
+    <mat-form-field>
+      <mat-label>Username</mat-label>
+      <input [(ngModel)]="username" (keyup.enter)="createUser()" matInput required>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input [(ngModel)]="password" (keyup.enter)="createUser()" matInput type="password" required>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Password confirm</mat-label>
+      <input [(ngModel)]="passwordConfirm" (keyup.enter)="createUser()" matInput type="password" required>
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="createUser()">Create user</button>
+  </mat-card-actions>
+</mat-card>

@@ -2,10 +2,10 @@ package main
 
 import (
 	"Claerance/internal/database"
-	"Claerance/internal/roles"
+	"Claerance/internal/entities/roles"
+	"Claerance/internal/entities/sites"
+	"Claerance/internal/entities/users"
 	"Claerance/internal/server"
-	"Claerance/internal/sites"
-	"Claerance/internal/users"
 )
 
 func main() {

@@ -4,7 +4,7 @@ info:
   description: Claerance
   version: 1.0.0
 servers:
-  - url: 'https://your-domain.tld'
+  - url: 'http://localhost:1401/api'
 paths:
   /auth:
     get:

@@ -1,46 +1,37 @@
 package server
 
 import (
-	"Claerance/internal/sites"
-	"encoding/json"
-	"fmt"
+	"Claerance/internal/entities/sites"
+	"Claerance/internal/entities/users"
 	"github.com/gorilla/mux"
-	"io/ioutil"
 	"net/http"
 )
-
-type CreateSiteRequest struct {
-	Name string `json:"name"`
-	Url  string `json:"url"`
-}
 
 func siteHandler(r *mux.Router) {
 	r.HandleFunc("/create", createSite).Methods("POST")
 	r.HandleFunc("/list", listSites)
+	r.HandleFunc("/{id:[0-9]+}", getSite).Methods("GET")
+	r.HandleFunc("/{id:[0-9]+}", updateSite).Methods("PUT")
+	r.HandleFunc("/{id:[0-9]+}", deleteSite).Methods("DELETE")
 }
 
 func createSite(w http.ResponseWriter, r *http.Request) {
-	var site CreateSiteRequest
-	defer r.Body.Close()
-
-	if !IsValid(r) {
-		w.WriteHeader(http.StatusForbidden)
-	}
-
-	body, _ := ioutil.ReadAll(r.Body)
-	_ = json.Unmarshal(body, &site)
-
-	sites.CreateSite(site.Name, site.Url)
+	create(w, r, sites.CreateSite)
 }
 
 func listSites(w http.ResponseWriter, r *http.Request) {
-	siteList, err := sites.GetAllSites()
+	var siteList []sites.Site
+	readAll(w, r, &siteList)
+}
 
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+func getSite(w http.ResponseWriter, r *http.Request) {
+	read(w, r, &users.User{})
+}
 
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, encodeJson(siteList))
+func updateSite(w http.ResponseWriter, r *http.Request) {
+	update(w, r, &sites.Site{})
+}
+
+func deleteSite(w http.ResponseWriter, r *http.Request) {
+	delete(w, r, &sites.Site{})
 }

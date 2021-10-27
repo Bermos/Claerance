@@ -1,6 +1,7 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
@@ -47,4 +48,9 @@ func apiEndpoint(r *mux.Router) {
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Resource not found", http.StatusBadRequest)
 	})
+}
+
+func encodeJson(v interface{}) string {
+	userJson, _ := json.Marshal(v)
+	return string(userJson)
 }

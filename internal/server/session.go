@@ -1,7 +1,7 @@
 package server
 
 import (
-	"Claerance/internal/users"
+	"Claerance/internal/entities/users"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	sess "github.com/gorilla/sessions"

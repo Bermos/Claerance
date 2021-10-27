@@ -3,8 +3,11 @@ info:
   title: Claerance
   description: Claerance
   version: 1.0.0
+  license:
+    name: MIT
 servers:
   - url: 'http://localhost:1401/api'
+
 paths:
   /auth:
     get:
@@ -16,6 +19,7 @@ paths:
         303:
           description: "Authentication unsuccessful, redirecting to login page."
       summary: "Authenticate to clearance"
+
   /session:
     post:
       tags:
@@ -39,6 +43,7 @@ paths:
       responses:
         200:
           description: "Session deleted"
+
   /user/list:
     get:
       tags:
@@ -46,6 +51,10 @@ paths:
       responses:
         200:
           description: "Get list of all users"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
         401:
           description: "No authorisation provided"
         403:
@@ -54,14 +63,30 @@ paths:
     get:
       tags:
         - user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: "Get detailed information about user"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         404:
           description: "No user with this id found"
     put:
       tags:
         - user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: "User info successfully updated"
@@ -70,8 +95,14 @@ paths:
     delete:
       tags:
         - user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
-        204:
+        200:
           description: "User successfully deleted"
         404:
           description: "No user with this id found"
@@ -90,19 +121,38 @@ paths:
       responses:
         200:
           description: "List all sites known to claerance"
-
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sites'
   /site/{id}:
     get:
       tags:
         - site
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: "Get detailed information about a site"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Site'
         404:
           description: "No site with this id was found"
     put:
       tags:
         - site
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: "Update information about a site"
@@ -111,8 +161,60 @@ paths:
     delete:
       tags:
         - site
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         204:
           description: "Delete site"
         404:
           description: "No site with this id was found"
+
+components:
+  schemas:
+    User:
+      required:
+        - ID
+      properties:
+        ID:
+          type: integer
+        CreatedAt:
+          type: string
+        UpdatedAt:
+          type: string
+        DeletedAt:
+          type: string
+        Username:
+          type: string
+        Email:
+          type: string
+        TelegramId:
+          type: integer
+
+    Users:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+    Site:
+      required:
+        - ID
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+        Url:
+          type: string
+        FirstContact:
+          type: string
+        LastContact:
+          type: string
+
+    Sites:
+      type: array
+      items:
+        $ref: '#/components/schemas/Site'

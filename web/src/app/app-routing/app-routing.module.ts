@@ -8,6 +8,7 @@ import { SiteComponent } from '../site/site.component';
 import { SitesComponent } from '../sites/sites.component';
 import { RoleComponent } from '../role/role.component';
 import { UserCreateComponent } from '../user-create/user-create.component';
+import { SiteCreateComponent } from '../site/site-create/site-create.component';
 
 /*
 Routing list, can't use /api route for anything since the go server will catch it an use for itself.
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'user/create', component: UserCreateComponent },
   { path: 'user/:id', component: UserComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'site/create', component: SiteCreateComponent },
   { path: 'site/:id', component: SiteComponent },
   { path: 'sites', component: SitesComponent },
   { path: 'role/:id', component: RoleComponent },

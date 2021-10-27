@@ -25,6 +25,7 @@ import { SiteComponent } from './site/site.component';
 import { RoleComponent } from './role/role.component';
 import { SitesComponent } from './sites/sites.component';
 import { UserCreateComponent } from './user-create/user-create.component';
+import { SiteCreateComponent } from './site/site-create/site-create.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { UserCreateComponent } from './user-create/user-create.component';
     SiteComponent,
     RoleComponent,
     SitesComponent,
-    UserCreateComponent
+    UserCreateComponent,
+    SiteCreateComponent
   ],
   imports: [
     BrowserModule,

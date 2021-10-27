@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SiteService } from './site.service';
+import { Site } from './site.struct';
 
 @Component({
   selector: 'app-site',
@@ -6,10 +9,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./site.component.css']
 })
 export class SiteComponent implements OnInit {
+  site: Site;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private router: Router, private ss: SiteService) { }
 
   ngOnInit(): void {
+    const siteId = +this.route.snapshot.paramMap.get('id');
+    this.ss.getSite(siteId).subscribe({
+      next: (user) => this.site = user,
+      error: () => this.router.navigate(['/dashboard'])
+    });
   }
 
+  editSite() {
+
+  }
+
+  deleteSite() {
+    this.ss.deleteSite(this.site.ID).subscribe(
+      () => this.router.navigate(['/dashboard']),
+    );
+  }
 }

@@ -1,0 +1,16 @@
+<mat-card>
+  <mat-card-content>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input [(ngModel)]="name" (keyup.enter)="createSite()" matInput required>
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Url</mat-label>
+      <input [(ngModel)]="url" (keyup.enter)="createSite()" matInput required>
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" (click)="createSite()">Create site</button>
+  </mat-card-actions>
+</mat-card>

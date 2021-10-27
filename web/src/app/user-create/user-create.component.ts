@@ -25,7 +25,6 @@ export class UserCreateComponent implements OnInit {
 
     this.us.createUser(this.username, this.password).subscribe(
       () => this.router.navigate(['/users']),
-      error => console.log('Could not create user.', error)
     );
   }
 }

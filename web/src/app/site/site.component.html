@@ -1,1 +1,31 @@
-<p>site works!</p>
+<mat-spinner *ngIf="!site"></mat-spinner>
+
+<mat-card *ngIf="site">
+  <mat-card-header>
+    <mat-card-title>{{ site.name }}</mat-card-title>
+    <span class="spacer"></span>
+    <button mat-icon-button aria-label="Edit user" (click)="editSite()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngIf="site.url">
+        <mat-icon mat-list-icon>email</mat-icon>
+        {{ site.url }}
+      </mat-list-item>
+      <mat-list-item *ngIf="site.firstContact">
+        <mat-icon mat-list-icon>send</mat-icon>
+        {{ site.firstContact }}
+      </mat-list-item>
+      <mat-list-item *ngIf="site.lastContact">
+        <mat-icon mat-list-icon>send</mat-icon>
+        {{ site.lastContact }}
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="warn" (click)="deleteSite()">Delete</button>
+  </mat-card-actions>
+</mat-card>

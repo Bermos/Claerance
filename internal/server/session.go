@@ -63,7 +63,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 		session.Values["authenticated"] = true
 		session.Values["username"] = login.Username
 		session.Values["id"] = user.ID
-		// Save it before we write to the response/return from the handler.
+		// Save it before writing to the response/return from the handler.
 		err := session.Save(r, w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)

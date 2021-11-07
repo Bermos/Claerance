@@ -18,7 +18,7 @@ func handleAuth(w http.ResponseWriter, r *http.Request) {
 	// Check if user is authenticated
 	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
 		log.Println("no auth:", r.Header.Get("X-Forwarded-Host"), "from:", r.Header.Get("X-Forwarded-For"))
-		http.Redirect(w, r, "http://localhost:1401/login", http.StatusSeeOther)
+		http.Redirect(w, r, "http://localhost:1401/login", http.StatusSeeOther) //TODO add host from config.Cfg.Server.Host
 		return
 	}
 

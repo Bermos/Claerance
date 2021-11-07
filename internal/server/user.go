@@ -47,6 +47,6 @@ func userBase(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 	} else {
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprint(w, encodeJson(user))
+		_, _ = fmt.Fprint(w, encodeJson(user))
 	}
 }

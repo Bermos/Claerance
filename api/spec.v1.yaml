@@ -28,6 +28,10 @@ paths:
       responses:
         201:
           description: "Session created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
         403:
           description: "Not authorized"
     delete:
@@ -54,7 +58,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Users'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
         401:
           description: "No authorisation provided"
         403:
@@ -124,7 +130,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Sites'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Site'
   /site/{id}:
     get:
       tags:
@@ -175,6 +183,19 @@ paths:
 
 components:
   schemas:
+    Session:
+      required:
+        - userId
+        - isValid
+        - username
+      properties:
+        userId:
+          type: integer
+        isValid:
+          type: boolean
+        username:
+          type: string
+
     User:
       required:
         - ID
@@ -194,11 +215,6 @@ components:
         TelegramId:
           type: integer
 
-    Users:
-      type: array
-      items:
-        $ref: '#/components/schemas/User'
-
     Site:
       required:
         - ID
@@ -213,8 +229,3 @@ components:
           type: string
         LastContact:
           type: string
-
-    Sites:
-      type: array
-      items:
-        $ref: '#/components/schemas/Site'

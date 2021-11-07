@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Claerance/internal/config"
 	"Claerance/internal/database"
 	"Claerance/internal/entities/roles"
 	"Claerance/internal/entities/sites"
@@ -9,6 +10,8 @@ import (
 )
 
 func main() {
+	config.Load()
+
 	database.SetDriver("sqlite3")
 	database.SetURI("test.db")
 
@@ -17,5 +20,5 @@ func main() {
 	roles.Setup()
 
 	server.InitSessionStore()
-	server.Start(1401)
+	server.Start()
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"Claerance/internal/config"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
@@ -16,7 +17,7 @@ type GenericMsg struct {
 }
 
 // Start the server on the given port. This is blocking.
-func Start(port int) {
+func Start() {
 	r := mux.NewRouter()
 
 	// Serve backend api
@@ -34,7 +35,7 @@ func Start(port int) {
 	})
 
 	// Start server, this function is blocking
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), r))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Cfg.Server.Port), r))
 }
 
 func apiEndpoint(r *mux.Router) {

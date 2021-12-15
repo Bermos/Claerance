@@ -9,7 +9,7 @@ job("Build and push Docker") {
      
     docker {
         build {
-            context = "docker"
+            context = "."
             file = "./docker/Dockerfile"
             labels["vendor"] = "Bermos Inc."
             args["HTTP_PROXY"] = "http://10.20.30.1:123"

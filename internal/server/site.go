@@ -2,7 +2,6 @@ package server
 
 import (
 	"Claerance/internal/entities/sites"
-	"Claerance/internal/entities/users"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -25,7 +24,7 @@ func listSites(w http.ResponseWriter, r *http.Request) {
 }
 
 func getSite(w http.ResponseWriter, r *http.Request) {
-	read(w, r, &users.User{})
+	read(w, r, &sites.Site{})
 }
 
 func updateSite(w http.ResponseWriter, r *http.Request) {

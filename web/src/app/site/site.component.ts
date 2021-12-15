@@ -16,7 +16,7 @@ export class SiteComponent implements OnInit {
   ngOnInit(): void {
     const siteId = +this.route.snapshot.paramMap.get('id');
     this.ss.getSite(siteId).subscribe({
-      next: (user) => this.site = user,
+      next: (site) => this.site = site,
       error: () => this.router.navigate(['/dashboard'])
     });
   }

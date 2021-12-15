@@ -1,5 +1,5 @@
 <mat-toolbar>
-  <span>{{ title }}</span>
+  <span routerLink="/dashboard">{{ title }}</span>
   <span class="spacer"></span>
   <span>
     <a *ngIf="!session?.isValid" mat-button routerLink="/login">Log in</a>

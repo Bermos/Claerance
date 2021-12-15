@@ -1,5 +1,7 @@
+<h1>Sites</h1>
+
 <div class="mat-elevation-z8">
-  <mat-form-field>
+  <mat-form-field class="table-filter">
     <mat-label>Filter</mat-label>
     <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
   </mat-form-field>
@@ -11,7 +13,7 @@
     </ng-container>
 
     <ng-container matColumnDef="url">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-header-cell *matHeaderCellDef> URL </th>
       <td mat-cell *matCellDef="let site"> {{site.url}} </td>
     </ng-container>
 

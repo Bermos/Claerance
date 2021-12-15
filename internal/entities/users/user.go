@@ -26,13 +26,10 @@ func Setup() {
 		log.Println("WARNING - Could not migrate db schema User")
 	}
 
+	// TODO: replace with init user creation
 	CreateUser(map[string]interface{}{
-		"username": "Bermos",
-		"password": "test",
-	})
-	CreateUser(map[string]interface{}{
-		"username": "Test",
-		"password": "test",
+		"username": "Admin",
+		"password": "admin",
 	})
 }
 

@@ -183,6 +183,26 @@ paths:
 
 components:
   schemas:
+    Overview:
+      required:
+        - users
+        - sites
+      properties:
+        users:
+          type: object
+          properties:
+            totalNumber:
+              type: number
+        sites:
+          type: object
+          properties:
+            totalNumber:
+              type: number
+            registered:
+              type: number
+            unregistered:
+              type: number
+
     Session:
       required:
         - userId

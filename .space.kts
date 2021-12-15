@@ -16,7 +16,7 @@ job("Build and push Docker") {
         }
 
         push("bermos.registry.jetbrains.space/p/claerance/containers/claerance") {
-            tags("version1.0." + api.executionNumber())
+            tags("version1.0")
         }
     }
 }

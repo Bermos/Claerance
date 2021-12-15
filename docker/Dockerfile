@@ -30,9 +30,11 @@ RUN ./node_modules/.bin/ng build --configuration production --source-map
 FROM alpine
 
 WORKDIR /app
+COPY conf/ ./conf/
 COPY --from=backend /build/claerence ./claerence
 COPY --from=frontend /build/public/ ./web/public/
 
 EXPOSE 1401
+VOLUME /app/conf/
 
 ENTRYPOINT ["./claerence"]

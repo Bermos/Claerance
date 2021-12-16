@@ -2,7 +2,7 @@ package server
 
 import (
 	"Claerance/internal/database"
-	"Claerance/internal/entities/users"
+	"Claerance/internal/schemas"
 	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -18,29 +18,29 @@ func userHandler(r *mux.Router) {
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {
-	create(w, r, users.CreateUser)
+	create(w, r, schemas.CreateUser)
 }
 
 func listUsers(w http.ResponseWriter, r *http.Request) {
-	var userList []users.User
+	var userList []schemas.User
 	readAll(w, r, &userList)
 }
 
 func getUser(w http.ResponseWriter, r *http.Request) {
-	read(w, r, &users.User{})
+	read(w, r, &schemas.User{})
 }
 
 func updateUser(w http.ResponseWriter, r *http.Request) {
-	update(w, r, &users.User{})
+	update(w, r, &schemas.User{})
 }
 
 func deleteUser(w http.ResponseWriter, r *http.Request) {
-	delete(w, r, &users.User{})
+	delete(w, r, &schemas.User{})
 }
 
 func userBase(w http.ResponseWriter, r *http.Request) {
 	db := database.GetDatabase()
-	var user users.User
+	var user schemas.User
 	result := db.First(&user, GetUserId(r))
 
 	if result.Error != nil {

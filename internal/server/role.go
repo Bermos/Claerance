@@ -1,7 +1,7 @@
 package server
 
 import (
-	"Claerance/internal/entities/roles"
+	"Claerance/internal/schemas"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -15,22 +15,22 @@ func roleHandler(r *mux.Router) {
 }
 
 func createRole(w http.ResponseWriter, r *http.Request) {
-	create(w, r, roles.CreateRole)
+	create(w, r, schemas.CreateRole)
 }
 
 func listRoles(w http.ResponseWriter, r *http.Request) {
-	var roleList []roles.Role
+	var roleList []schemas.Role
 	readAll(w, r, &roleList)
 }
 
 func getRole(w http.ResponseWriter, r *http.Request) {
-	read(w, r, &roles.Role{})
+	read(w, r, &schemas.Role{})
 }
 
 func updateRole(w http.ResponseWriter, r *http.Request) {
-	update(w, r, &roles.Role{})
+	update(w, r, &schemas.Role{})
 }
 
 func deleteRole(w http.ResponseWriter, r *http.Request) {
-	delete(w, r, &roles.Role{})
+	delete(w, r, &schemas.Role{})
 }

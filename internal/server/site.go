@@ -1,7 +1,7 @@
 package server
 
 import (
-	"Claerance/internal/entities/sites"
+	"Claerance/internal/schemas"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -15,22 +15,22 @@ func siteHandler(r *mux.Router) {
 }
 
 func createSite(w http.ResponseWriter, r *http.Request) {
-	create(w, r, sites.CreateSite)
+	create(w, r, schemas.CreateSite)
 }
 
 func listSites(w http.ResponseWriter, r *http.Request) {
-	var siteList []sites.Site
+	var siteList []schemas.Site
 	readAll(w, r, &siteList)
 }
 
 func getSite(w http.ResponseWriter, r *http.Request) {
-	read(w, r, &sites.Site{})
+	read(w, r, &schemas.Site{})
 }
 
 func updateSite(w http.ResponseWriter, r *http.Request) {
-	update(w, r, &sites.Site{})
+	update(w, r, &schemas.Site{})
 }
 
 func deleteSite(w http.ResponseWriter, r *http.Request) {
-	delete(w, r, &sites.Site{})
+	delete(w, r, &schemas.Site{})
 }

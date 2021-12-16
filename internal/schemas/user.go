@@ -1,14 +1,8 @@
-package users
+package schemas
 
 import (
-	"Claerance/internal/database"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"log"
-)
-
-var (
-	db *gorm.DB
 )
 
 type User struct {
@@ -17,20 +11,6 @@ type User struct {
 	PwdHash    string `json:"-"`
 	Email      string `json:"email"`
 	TelegramId int    `json:"telegramId"`
-}
-
-func Setup() {
-	db = database.GetDatabase()
-
-	if err := db.AutoMigrate(&User{}); err != nil {
-		log.Println("WARNING - Could not migrate db schema User")
-	}
-
-	// TODO: replace with init user creation
-	CreateUser(map[string]interface{}{
-		"username": "Admin",
-		"password": "admin",
-	})
 }
 
 func CreateUser(request map[string]interface{}) {

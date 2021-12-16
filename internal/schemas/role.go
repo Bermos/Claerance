@@ -1,13 +1,8 @@
-package roles
+package schemas
 
 import (
 	"Claerance/internal/database"
 	"gorm.io/gorm"
-	"log"
-)
-
-var (
-	db *gorm.DB
 )
 
 type Role struct {
@@ -17,14 +12,6 @@ type Role struct {
 
 type CreateRoleRequest struct {
 	Name string `json:"name"`
-}
-
-func Setup() {
-	db = database.GetDatabase()
-
-	if err := db.AutoMigrate(&Role{}); err != nil {
-		log.Println("WARNING - Could not migrate db schema Role")
-	}
 }
 
 func CreateRole(request map[string]interface{}) {

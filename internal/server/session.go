@@ -1,7 +1,7 @@
 package server
 
 import (
-	"Claerance/internal/entities/users"
+	"Claerance/internal/schemas"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	sess "github.com/gorilla/sessions"
@@ -54,8 +54,8 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 	device := r.Header.Get("User-Agent")*/
 	log.Println("login from:", login.Username, "with:", login.Password)
 
-	user, _ := users.GetUserByName(login.Username)
-	if users.CheckPassword(user, login.Password) {
+	user, _ := schemas.GetUserByName(login.Username)
+	if schemas.CheckPassword(user, login.Password) {
 		log.Println("Login successful")
 
 		session, _ := store.Get(r, "claerance-session")

@@ -1,7 +1,6 @@
 package schemas
 
 import (
-	"Claerance/internal/database"
 	"gorm.io/gorm"
 	"time"
 )
@@ -20,8 +19,6 @@ type CreateSiteRequest struct {
 }
 
 func CreateSite(request map[string]interface{}) {
-
-	db := database.GetDatabase()
 	db.Create(&Site{
 		Name:         request["name"].(string),
 		Url:          request["url"].(string),

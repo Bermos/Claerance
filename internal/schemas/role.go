@@ -1,13 +1,13 @@
 package schemas
 
 import (
-	"Claerance/internal/database"
 	"gorm.io/gorm"
 )
 
 type Role struct {
 	gorm.Model
-	Name string `json:"name"`
+	Name  string  `json:"name"`
+	Users []*User `json:"users" gorm:"many2many:user_roles"`
 }
 
 type CreateRoleRequest struct {
@@ -15,7 +15,6 @@ type CreateRoleRequest struct {
 }
 
 func CreateRole(request map[string]interface{}) {
-	db := database.GetDatabase()
 	db.Create(&Role{
 		Name: request["name"].(string),
 	})

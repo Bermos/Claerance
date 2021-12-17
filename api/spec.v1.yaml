@@ -5,6 +5,7 @@ info:
   version: 1.0.0
   license:
     name: MIT
+    url: '../LICENSE'
 servers:
   - url: 'http://localhost:8080/api'
 
@@ -13,12 +14,12 @@ paths:
     get:
       tags:
         - auth
+      summary: "Authenticate to clearance"
       responses:
         200:
           description: "Authentication successful"
         303:
           description: "Authentication unsuccessful, redirecting to login page."
-      summary: "Authenticate to clearance"
 
   /session:
     post:
@@ -37,6 +38,7 @@ paths:
     delete:
       tags:
         - session
+      summary: "Delete current session"
       responses:
         200:
           description: "Session deleted"
@@ -44,6 +46,7 @@ paths:
     delete:
       tags:
         - session
+      summary: "Delete session by id"
       responses:
         200:
           description: "Session deleted"
@@ -60,7 +63,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Users'
+                  $ref: '#/components/schemas/User'
         401:
           description: "No authorisation provided"
         403:
@@ -180,6 +183,36 @@ paths:
           description: "Delete site"
         404:
           description: "No site with this id was found"
+  /site/{id}/authorized:
+    get:
+      tags:
+        - site
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Get list of authorized entities"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  roles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Role'
+
+
+        404:
+          description: "No site with this id was found"
 
 components:
   schemas:
@@ -234,6 +267,19 @@ components:
           type: string
         TelegramId:
           type: integer
+
+    Role:
+      required:
+        - ID
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+        Users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
 
     Site:
       required:

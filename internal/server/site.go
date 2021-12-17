@@ -1,7 +1,9 @@
 package server
 
 import (
+	"Claerance/internal/database"
 	"Claerance/internal/schemas"
+	"fmt"
 	"github.com/gorilla/mux"
 	"net/http"
 )
@@ -12,6 +14,7 @@ func siteHandler(r *mux.Router) {
 	r.HandleFunc("/{id:[0-9]+}", getSite).Methods("GET")
 	r.HandleFunc("/{id:[0-9]+}", updateSite).Methods("PUT")
 	r.HandleFunc("/{id:[0-9]+}", deleteSite).Methods("DELETE")
+	r.HandleFunc("/{id:[0-9]+}/authorized", getSiteAuthorized).Methods("GET")
 }
 
 func createSite(w http.ResponseWriter, r *http.Request) {
@@ -33,4 +36,20 @@ func updateSite(w http.ResponseWriter, r *http.Request) {
 
 func deleteSite(w http.ResponseWriter, r *http.Request) {
 	delete(w, r, &schemas.Site{})
+}
+
+func getSiteAuthorized(w http.ResponseWriter, r *http.Request) {
+	var authorizedEntities schemas.SiteAuthorizedEntities
+	var site schemas.Site
+	db := database.GetDatabase()
+
+	results := db.Find(&site)
+	if results.Error != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	authorizedEntities.Users = site.AuthorizedUsers
+	authorizedEntities.Roles = site.AuthorizedRoles
+	fmt.Fprintf(w, encodeJson(authorizedEntities))
 }

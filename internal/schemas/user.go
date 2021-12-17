@@ -7,10 +7,11 @@ import (
 
 type User struct {
 	gorm.Model
-	Username   string `json:"username"`
-	PwdHash    string `json:"-"`
-	Email      string `json:"email"`
-	TelegramId int    `json:"telegramId"`
+	Username   string  `json:"username"`
+	PwdHash    string  `json:"-"`
+	Email      string  `json:"email"`
+	TelegramId int     `json:"telegramId"`
+	Roles      []*Role `json:"roles" gorm:"many2many:user_roles"`
 }
 
 func CreateUser(request map[string]interface{}) {

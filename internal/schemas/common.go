@@ -15,12 +15,16 @@ func Setup() {
 		log.Println("WARNING - Could not migrate db schema Role")
 	}
 
-	if err := db.AutoMigrate(&Site{}); err != nil {
-		log.Println("WARNING - Could not migrate db schema Site")
+	if err := db.AutoMigrate(&Group{}); err != nil {
+		log.Println("WARNING - Could not migrate db schema Group")
 	}
 
 	if err := db.AutoMigrate(&User{}); err != nil {
 		log.Println("WARNING - Could not migrate db schema User")
+	}
+
+	if err := db.AutoMigrate(&Site{}); err != nil {
+		log.Println("WARNING - Could not migrate db schema Site")
 	}
 
 	// TODO: replace with init user creation

@@ -50,6 +50,6 @@ func getSiteAuthorized(w http.ResponseWriter, r *http.Request) {
 	}
 
 	authorizedEntities.Users = site.AuthorizedUsers
-	authorizedEntities.Roles = site.AuthorizedRoles
+	authorizedEntities.Groups = site.AuthorizedGroups
 	fmt.Fprintf(w, encodeJson(authorizedEntities))
 }

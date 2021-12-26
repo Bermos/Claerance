@@ -286,6 +286,19 @@ components:
           items:
             $ref: '#/components/schemas/User'
 
+    Group:
+      required:
+        - ID
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+        Users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
     Site:
       required:
         - ID

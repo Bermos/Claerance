@@ -219,6 +219,65 @@ paths:
         404:
           description: "No site with this id was found"
 
+  /group/list:
+    get:
+      tags:
+        - group
+      responses:
+        200:
+          description: "List all groups"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+  /group/{id}:
+    get:
+      tags:
+        - group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Get detailed information about a group"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Group'
+    put:
+      tags:
+        - group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "Update information about a group"
+        404:
+          description: "No group with this id was found"
+    delete:
+      tags:
+        - group
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        204:
+          description: "Delete group"
+        404:
+          description: "No group with this id was found"
+
 components:
   schemas:
     Overview:

@@ -12,9 +12,10 @@ Build: `docker build . -t claerance`
 Run: `docker run claerance`
 
 ### Not Docker
-#### Building and running
-Build: `go build -o claerance ./cmd/main.go`  
-Run: `./claerance`
+#### Building, testing & running
+- Build: `go build -o claerance ./cmd/main.go`
+- Test: `go test`
+- Run: `./claerance`
 
 #### Contribute
 1. Fork it

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"errors"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"log"
@@ -14,7 +15,12 @@ var (
 
 func GetDatabase() *gorm.DB {
 	if db == nil {
-		Connect()
+		err := connect()
+		if err != nil {
+			log.Fatalf("ERROR - %s", err)
+		} else {
+			log.Println("INFO - Database connection established")
+		}
 	}
 
 	return db
@@ -38,16 +44,12 @@ func SetURI(uri string) {
 	dbURI = uri
 }
 
-func Connect() {
+func connect() error {
 	if dbDriver == "" {
-		log.Fatal("ERROR - trying to initiate db without driver being set. Abort.")
+		return errors.New("trying to initiate db without driver being set")
 	}
 
 	var err error
 	db, err = gorm.Open(sqlite.Open(dbURI), &gorm.Config{})
-	if err != nil {
-		log.Fatal(err)
-	} else {
-		log.Println("INFO - Database connection established")
-	}
+	return err
 }

@@ -4,7 +4,8 @@ import (
 	"errors"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"log"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -17,9 +18,9 @@ func GetDatabase() *gorm.DB {
 	if db == nil {
 		err := connect()
 		if err != nil {
-			log.Fatalf("ERROR - %s", err)
+			log.Error(err)
 		} else {
-			log.Println("INFO - Database connection established")
+			log.Info("Database connection established")
 		}
 	}
 
@@ -28,7 +29,7 @@ func GetDatabase() *gorm.DB {
 
 func SetDriver(driver string) {
 	if db != nil {
-		log.Println("WARNING - trying to set db driver after db is already initiated, no changes made!")
+		log.Warn("Trying to set db driver after db is already initiated, no changes made!")
 		return
 	}
 
@@ -37,7 +38,7 @@ func SetDriver(driver string) {
 
 func SetURI(uri string) {
 	if db != nil {
-		log.Println("WARNING - trying to set db uri after db is already initiated, no changes made!")
+		log.Warn("Trying to set db uri after db is already initiated, no changes made!")
 		return
 	}
 

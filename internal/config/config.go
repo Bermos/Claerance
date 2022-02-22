@@ -2,9 +2,10 @@ package config
 
 import (
 	"gopkg.in/yaml.v3"
-	"log"
 	"os"
 	"path/filepath"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type Config struct {
@@ -21,17 +22,22 @@ const configPath = "conf/conf.yml"
 var Cfg Config
 
 func Load() {
+	setDefaultLogging()
 	absPath, _ := filepath.Abs(configPath)
 	file, err := os.Open(absPath)
 	if err != nil {
-		log.Println("INFO - No config file found, using default values")
-		log.Fatal(err)
+		log.Infoln("No config file found, using default values")
+		log.Fatalln("Default config not implemented. Abort")
 		return
 	}
 	defer file.Close()
 
 	decoder := yaml.NewDecoder(file)
 	if err = decoder.Decode(&Cfg); err != nil {
-		log.Fatal("ERROR - Malformed config.yml", err)
+		log.Fatalln("Malformed config.yml", err)
 	}
+}
+
+func setDefaultLogging() {
+	log.SetFormatter(&log.TextFormatter{})
 }

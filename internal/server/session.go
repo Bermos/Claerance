@@ -6,8 +6,9 @@ import (
 	"github.com/gorilla/mux"
 	sess "github.com/gorilla/sessions"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	log "github.com/sirupsen/logrus"
 )
 
 var store *sess.CookieStore
@@ -52,11 +53,11 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 	}
 	/*ip := r.Header.Get("X-Forwarded-Host")
 	device := r.Header.Get("User-Agent")*/
-	log.Println("login from:", login.Username, "with:", login.Password)
+	log.Debugf("login from: %s with: %s", login.Username, login.Password)
 
 	user, _ := schemas.GetUserByName(login.Username)
 	if schemas.CheckPassword(user, login.Password) {
-		log.Println("Login successful")
+		log.Debug("Login successful")
 
 		session, _ := store.Get(r, "claerance-session")
 		// Set some session values.
@@ -71,7 +72,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 		}
 		w.WriteHeader(http.StatusCreated)
 	} else {
-		log.Println("Login failed")
+		log.Debug("Login failed")
 		http.Error(w, "Forbidden", http.StatusUnauthorized)
 		//w.WriteHeader(http.StatusUnauthorized)
 	}
@@ -90,10 +91,10 @@ func IsValid(r *http.Request) bool {
 
 	// Check if user is authenticated
 	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
-		log.Println("no auth:", r.Header.Get("X-Forwarded-Host"), "from:", r.Header.Get("X-Forwarded-For"))
+		log.Debugf("no auth: %s from: %s", r.Header.Get("X-Forwarded-Host"), r.Header.Get("X-Forwarded-For"))
 		return false
 	} else {
-		log.Println("auth:   ", r.Header.Get("X-Forwarded-Host"), "from:", r.Header.Get("X-Forwarded-For"))
+		log.Debugf("auth:   %s from: %s", r.Header.Get("X-Forwarded-Host"), r.Header.Get("X-Forwarded-For"))
 		return true
 	}
 }
@@ -109,9 +110,9 @@ func GetUserId(r *http.Request) uint {
 }
 
 func InitSessionStore() {
-	log.Println("INFO - Setting up sessions store")
+	log.Info("Setting up sessions store")
 	key := []byte("asdjfadfasbfasdhfajk")
-	log.Printf("INFO - Key length: %d", len(key))
+	log.Info("Key length: %d", len(key))
 	store = sess.NewCookieStore(key)
 
 	store.Options = &sess.Options{
@@ -121,5 +122,5 @@ func InitSessionStore() {
 		HttpOnly: true,
 	}
 
-	log.Println("INFO - Sessions store setup")
+	log.Info("Sessions store setup")
 }

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"Claerance/internal/authentication"
 	"Claerance/internal/database"
 	"encoding/json"
 	"fmt"
@@ -15,7 +16,7 @@ import (
 func create(w http.ResponseWriter, r *http.Request, createFunc func(map[string]interface{})) {
 	defer r.Body.Close()
 
-	if !IsValid(r) {
+	if !authentication.TokenValid(r) {
 		w.WriteHeader(http.StatusForbidden)
 	}
 

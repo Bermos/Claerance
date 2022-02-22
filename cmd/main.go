@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Claerance/internal/authentication"
 	"Claerance/internal/config"
 	"Claerance/internal/database"
 	"Claerance/internal/schemas"
@@ -15,6 +16,6 @@ func main() {
 
 	schemas.Setup()
 
-	server.InitSessionStore()
+	authentication.InitToken()
 	server.Start()
 }

@@ -31,6 +31,12 @@ func GetUserByName(username string) (User, error) {
 	return user, result.Error
 }
 
+func GetUserById(id uint) (*User, error) {
+	var user *User
+	result := db.First(user, id)
+	return user, result.Error
+}
+
 func CheckPassword(user User, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(user.PwdHash), []byte(password))
 	return err == nil

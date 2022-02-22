@@ -36,6 +36,7 @@ func Start() {
 	})
 
 	// Start server, this function is blocking
+	log.Infof("Server listening on: %d", config.Cfg.Server.Port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", config.Cfg.Server.Port), r))
 }
 

@@ -1,17 +1,15 @@
 package server
 
 import (
+	"Claerance/internal/authentication"
 	"Claerance/internal/schemas"
 	"encoding/json"
 	"github.com/gorilla/mux"
-	sess "github.com/gorilla/sessions"
 	"io/ioutil"
 	"net/http"
 
 	log "github.com/sirupsen/logrus"
 )
-
-var store *sess.CookieStore
 
 type LoginRequest struct {
 	Username string `json:"username"`
@@ -31,9 +29,9 @@ func sessionHandler(r *mux.Router) {
 }
 
 func getSessionValid(w http.ResponseWriter, r *http.Request) {
-	if IsValid(r) {
+	if user := authentication.TokenUser(r); user != nil {
 		w.WriteHeader(http.StatusOK)
-		_ = json.NewEncoder(w).Encode(SessionInfo{UserId: GetUserId(r), Username: GetUsername(r), IsValid: true})
+		_ = json.NewEncoder(w).Encode(SessionInfo{UserId: user.ID, Username: user.Username, IsValid: true})
 	} else {
 		w.WriteHeader(http.StatusUnauthorized)
 		_ = json.NewEncoder(w).Encode(SessionInfo{IsValid: false})
@@ -59,13 +57,7 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 	if schemas.CheckPassword(user, login.Password) {
 		log.Debug("Login successful")
 
-		session, _ := store.Get(r, "claerance-session")
-		// Set some session values.
-		session.Values["authenticated"] = true
-		session.Values["username"] = login.Username
-		session.Values["id"] = user.ID
-		// Save it before writing to the response/return from the handler.
-		err := session.Save(r, w)
+		err := authentication.TokenCreate(r, user).Save(r, w)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -79,48 +71,5 @@ func createSession(w http.ResponseWriter, r *http.Request) {
 }
 
 func destroySession(w http.ResponseWriter, r *http.Request) {
-	session, _ := store.Get(r, "claerance-session")
-
-	// Revoke users authentication
-	session.Values["authenticated"] = false
-	_ = session.Save(r, w)
-}
-
-func IsValid(r *http.Request) bool {
-	session, _ := store.Get(r, "claerance-session")
-
-	// Check if user is authenticated
-	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
-		log.Debugf("no auth: %s from: %s", r.Header.Get("X-Forwarded-Host"), r.Header.Get("X-Forwarded-For"))
-		return false
-	} else {
-		log.Debugf("auth:   %s from: %s", r.Header.Get("X-Forwarded-Host"), r.Header.Get("X-Forwarded-For"))
-		return true
-	}
-}
-
-func GetUsername(r *http.Request) string {
-	session, _ := store.Get(r, "claerance-session")
-	return session.Values["username"].(string)
-}
-
-func GetUserId(r *http.Request) uint {
-	session, _ := store.Get(r, "claerance-session")
-	return session.Values["id"].(uint)
-}
-
-func InitSessionStore() {
-	log.Info("Setting up sessions store")
-	key := []byte("asdjfadfasbfasdhfajk")
-	log.Info("Key length: %d", len(key))
-	store = sess.NewCookieStore(key)
-
-	store.Options = &sess.Options{
-		Path:     "/",
-		MaxAge:   86400 * 7, // 7 days
-		Secure:   true,
-		HttpOnly: true,
-	}
-
-	log.Info("Sessions store setup")
+	_ = authentication.TokenInvalidate(r).Save(r, w)
 }

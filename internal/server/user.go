@@ -41,7 +41,7 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 func userBase(w http.ResponseWriter, r *http.Request) {
 	db := database.GetDatabase()
 	var user schemas.User
-	result := db.First(&user, GetUserId(r))
+	result := db.First(&user, 0) // TODO: GetUserID or make obsolete
 
 	if result.Error != nil {
 		w.WriteHeader(http.StatusNotFound)
